@@ -4,159 +4,564 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Voto Online Peru 2026</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root {
-      --red: #cc0000; --red2: #e60000; --white: #1e2530; --light: #1a1f28;
-      --gray: #9ca3af; --dark: #e8eaf0; --border: #2e3748;
-      --green: #22c55e; --blue: #60a5fa; --shadow: 0 2px 8px rgba(0,0,0,.35);
-      --card-bg: #232b38; --input-bg: #1e2530; --user-bar-bg: #1a1f28;
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2330;
+      --border: #30363d;
+      --border2: #3d4551;
+      --text: #e6edf3;
+      --muted: #7d8590;
+      --red: #cc0000;
+      --red2: #e60000;
+      --red3: #ff2222;
+      --red-glow: rgba(204,0,0,.18);
+      --green: #2ea043;
+      --blue: #58a6ff;
+      --white: #ffffff;
+      --card: #161b22;
+      --shadow: 0 4px 24px rgba(0,0,0,.5);
+      --radius: 12px;
+      --radius-sm: 8px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--dark); }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
     a { color: var(--blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
 
     .header {
-      background: linear-gradient(135deg, #cc0000, #8b0000);
-      color: #fff; padding: 14px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,.25); position: sticky; top: 0; z-index: 100;
+      background: linear-gradient(135deg, #9b0000 0%, #cc0000 50%, #7a0000 100%);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 20px rgba(0,0,0,.6);
     }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header-logo { font-size: 1.5rem; color: #fff; }
-    .header-title { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
-    .header-sub { font-size: .72rem; opacity: .85; }
-    .header-nav { display: flex; gap: 12px; align-items: center; }
-    .header-nav a { color: #fff; font-size: .82rem; font-weight: 600; padding: 6px 12px; border-radius: 6px; transition: background .2s; cursor: pointer; }
-    .header-nav a:hover { background: rgba(255,255,255,.18); text-decoration: none; }
-    .btn-votar-nav { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,.12);
+    }
+    .header-left { display:flex; align-items:center; gap:14px; }
+    .header-flag {
+      width: 32px; height: 22px;
+      background: linear-gradient(to right, #fff 33%, #cc0000 33% 66%, #fff 66%);
+      border-radius: 3px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.3);
+      flex-shrink: 0;
+    }
+    .header-logo-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .header-title { font-size:1rem; font-weight:800; color:#fff; letter-spacing:-.2px; }
+    .header-sub { font-size:.7rem; color:rgba(255,255,255,.75); font-weight:500; margin-top:1px; }
+    .header-nav { display:flex; gap:6px; align-items:center; }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: .8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.9);
+      cursor: pointer;
+      transition: background .15s;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.15); }
+    .nav-btn.active { background: rgba(255,255,255,.2); color:#fff; }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+    .user-bar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .user-bar-info { display:flex; align-items:center; gap:8px; }
+    .user-avatar {
+      width: 26px; height: 26px;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .78rem;
+      font-family: inherit;
+      padding: 4px 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .15s;
+    }
+    .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
-    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
-    .tab { padding: 10px 20px; cursor: pointer; font-size: .9rem; font-weight: 600; color: var(--gray); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all .2s; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 28px 20px; }
+
+    .tabs {
+      display: flex;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 10px 18px;
+      cursor: pointer;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all .15s;
+      border-radius: 6px 6px 0 0;
+    }
+    .tab:hover:not(.active) { color: var(--text); background: var(--bg2); }
     .tab.active { color: var(--red2); border-bottom-color: var(--red2); }
-    .tab:hover:not(.active) { color: var(--dark); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-    .section-sub { font-size: .83rem; color: var(--gray); margin-bottom: 20px; }
-
-    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: .88rem; display: flex; align-items: flex-start; gap: 10px; }
-    .alert-info { background: #1a2540; border: 1px solid #1e40af; color: #93c5fd; }
-    .alert-warn { background: #2a2510; border: 1px solid #78560a; color: #fbbf24; }
-    .alert-success { background: #0f2318; border: 1px solid #166534; color: #4ade80; }
-    .alert-error { background: #2a1212; border: 1px solid #7f1d1d; color: #fca5a5; }
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      font-size: .85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
     .alert i { margin-top: 1px; flex-shrink: 0; }
+    .alert-info    { background: #0d1f33; border: 1px solid #1d4b73; color: #79b8f3; }
+    .alert-warn    { background: #261d00; border: 1px solid #5a4200; color: #e3b341; }
+    .alert-success { background: #0a1f0e; border: 1px solid #1a5427; color: #56d364; }
+    .alert-error   { background: #1f0e0e; border: 1px solid #5a1e1e; color: #f85149; }
 
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
 
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; transition: border .2s; background: var(--card-bg); }
-    .form-group input:focus { outline: none; border-color: var(--red2); box-shadow: 0 0 0 3px rgba(204,0,0,.08); }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -.3px;
+    }
+    .section-sub { font-size: .82rem; color: var(--muted); margin-bottom: 20px; }
 
-    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: 8px; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: inherit;
+    }
     .btn-primary { background: var(--red2); color: #fff; }
-    .btn-primary:hover { background: var(--red); transform: translateY(-1px); }
-    .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
-    .btn-secondary { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
-    .btn-secondary:hover { background: #2e3748; }
+    .btn-primary:hover:not(:disabled) { background: var(--red3); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(204,0,0,.35); }
+    .btn-primary:disabled { background: #3d4551; color: #7d8590; cursor: not-allowed; }
+    .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
     .btn-full { width: 100%; justify-content: center; }
 
-    .candidates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-    .candidate-card {
-      background: var(--card-bg); border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px;
-      text-align: center; cursor: pointer; transition: all .2s; position: relative;
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: .82rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: .9rem;
+      color: var(--text);
+      font-family: inherit;
+      transition: border .15s, box-shadow .15s;
     }
-    .candidate-card:hover { border-color: var(--red2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(204,0,0,.12); }
-    .candidate-card.selected { border-color: var(--red2); background: #2a1f1f; box-shadow: 0 0 0 3px rgba(204,0,0,.15); }
-    .candidate-card.nulo { border-color: #6b7280; }
-    .candidate-card.nulo:hover { border-color: #6b7280; background: #2a2f3a; }
-    .candidate-card.nulo.selected { border-color: #6b7280; background: #2a2f3a; box-shadow: 0 0 0 3px rgba(107,114,128,.2); }
+    .form-group input::placeholder { color: var(--muted); }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--red2);
+      box-shadow: 0 0 0 3px var(--red-glow);
+    }
+
+    .name-entry { text-align:center; padding:40px 20px; max-width:440px; margin:0 auto; }
+    .name-entry .entry-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--red), #7a0000);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #fff;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 24px rgba(204,0,0,.3);
+    }
+    .name-entry h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -.4px; }
+    .name-entry p { font-size: .88rem; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 12px;
+    }
+    .candidate-card {
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 12px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .candidate-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--red-glow);
+      opacity: 0;
+      transition: opacity .18s;
+      border-radius: var(--radius);
+    }
+    .candidate-card:hover { border-color: var(--red2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+    .candidate-card:hover::before { opacity: 1; }
+    .candidate-card.selected {
+      border-color: var(--red2);
+      background: #1f0d0d;
+      box-shadow: 0 0 0 3px var(--red-glow);
+    }
+    .candidate-card.selected::before { opacity: 1; }
+    .candidate-card.nulo:hover { border-color: #565e6a; }
+    .candidate-card.nulo:hover::before { background: rgba(86,94,106,.12); opacity:1; }
+    .candidate-card.nulo.selected { border-color: #565e6a; background: #171b21; box-shadow: 0 0 0 3px rgba(86,94,106,.2); }
+    .candidate-card.nulo.selected::before { background: rgba(86,94,106,.1); }
+
     .candidate-check {
-      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
-      background: var(--red2); color: #fff; border-radius: 50%;
-      display: none; align-items: center; justify-content: center; font-size: .65rem;
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 20px; height: 20px;
+      background: var(--red2);
+      color: #fff;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: .58rem;
+      z-index: 1;
     }
     .candidate-card.selected .candidate-check { display: flex; }
-    .candidate-card.nulo.selected .candidate-check { background: #374151; }
-    .cand-icon {
-      width: 80px; height: 80px; margin: 0 auto 10px; display: flex;
-      align-items: center; justify-content: center; border-radius: 10px;
-      font-size: 1.6rem; color: #fff;
+    .candidate-card.nulo.selected .candidate-check { background: #565e6a; }
+
+    .cand-logo-wrap {
+      width: 72px; height: 72px;
+      margin: 0 auto 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.04);
+      position: relative;
+      z-index: 1;
     }
-    .candidate-party { font-size: .65rem; font-weight: 700; color: var(--red2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-    .candidate-name { font-size: .82rem; font-weight: 600; color: var(--dark); line-height: 1.3; }
-    .candidate-card.nulo .candidate-party { color: #4b5563; }
+    .cand-logo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      padding: 6px;
+    }
+    .cand-icon-fallback {
+      width: 72px; height: 72px;
+      margin: 0 auto 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+    .candidate-party {
+      font-size: .62rem;
+      font-weight: 700;
+      color: var(--red2);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 3px;
+      position: relative;
+      z-index: 1;
+    }
+    .candidate-card.nulo .candidate-party { color: #565e6a; }
+    .candidate-name {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      position: relative;
+      z-index: 1;
+    }
 
     .vote-confirm-bar {
-      position: sticky; bottom: 0; background: #1e2530; border-top: 2px solid var(--border);
-      padding: 12px 20px; display: none; align-items: center; justify-content: space-between;
-      box-shadow: 0 -4px 12px rgba(0,0,0,.08); gap: 12px; flex-wrap: wrap; z-index: 50;
+      position: sticky;
+      bottom: 0;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 14px 24px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -8px 24px rgba(0,0,0,.5);
+      gap: 12px;
+      flex-wrap: wrap;
+      z-index: 100;
     }
     .vote-confirm-bar.show { display: flex; }
-    .vote-selected-info { font-size: .9rem; font-weight: 600; }
-    .vote-selected-info span { color: var(--red2); }
+    .confirm-label { font-size: .88rem; color: var(--muted); }
+    .confirm-name { font-weight: 700; color: var(--text); font-size: .92rem; }
 
-    .results-list { display: flex; flex-direction: column; gap: 10px; }
-    .result-item { display: flex; align-items: center; gap: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
-    .result-rank { font-size: .85rem; font-weight: 700; color: var(--gray); width: 24px; text-align: center; }
-    .result-icon { width: 44px; height: 44px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
-    .result-info { flex: 1; min-width: 0; }
-    .result-party { font-size: .75rem; color: var(--red2); font-weight: 700; text-transform: uppercase; }
-    .result-name { font-size: .88rem; font-weight: 600; color: var(--dark); }
+    .results-list { display:flex; flex-direction:column; gap:8px; }
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      transition: border-color .15s;
+    }
+    .result-item:hover { border-color: var(--border2); }
+    .result-rank { font-size: .82rem; font-weight: 700; color: var(--muted); width: 20px; text-align:center; flex-shrink:0; }
+    .result-rank.gold   { color: #e3b341; }
+    .result-rank.silver { color: #adbac7; }
+    .result-rank.bronze { color: #c4703c; }
+    .result-logo-wrap {
+      width: 40px; height: 40px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: rgba(255,255,255,.04);
+    }
+    .result-logo-wrap img { width:100%; height:100%; object-fit:contain; padding:3px; }
+    .result-icon-fallback {
+      width: 40px; height: 40px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #fff;
+    }
+    .result-info { flex:1; min-width:0; }
+    .result-party { font-size: .7rem; color: var(--red2); font-weight: 700; text-transform:uppercase; letter-spacing:.5px; }
+    .result-item.nulo .result-party { color: #565e6a; }
+    .result-name { font-size: .85rem; font-weight: 600; color: var(--text); }
+    .result-votes { font-size: .7rem; color: var(--muted); margin-top:1px; }
     .result-bar-wrap { flex: 2; min-width: 80px; }
-    .result-bar { height: 10px; border-radius: 5px; background: #2e3748; overflow: hidden; }
-    .result-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #cc0000, #e60000); transition: width 1s ease; }
-    .result-bar-fill.gray { background: #6b7280; }
-    .result-pct { font-size: .82rem; font-weight: 700; color: var(--dark); min-width: 44px; text-align: right; }
-    .result-votes { font-size: .72rem; color: var(--gray); }
-    .result-item.nulo .result-party { color: #4b5563; }
+    .result-bar { height: 8px; border-radius: 4px; background: var(--bg3); overflow: hidden; }
+    .result-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--red), var(--red3));
+      transition: width 1s cubic-bezier(.25,.46,.45,.94);
+    }
+    .result-bar-fill.gray { background: #40474f; }
+    .result-pct { font-size: .85rem; font-weight: 700; color: var(--text); min-width: 44px; text-align:right; }
 
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .stat-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
-    .stat-box-num { font-size: 1.6rem; font-weight: 800; color: var(--red2); }
-    .stat-box-num.gray { color: var(--gray); }
-    .stat-box-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-box-num { font-size: 1.8rem; font-weight: 800; color: var(--red2); letter-spacing: -1px; }
+    .stat-box-num.gray { color: var(--muted); }
+    .stat-box-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: 3px; font-weight: 600; }
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
     .modal-overlay.open { display: flex; }
-    .modal { background: var(--card-bg); border-radius: 16px; padding: 28px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
-    .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-    .modal-sub { font-size: .85rem; color: var(--gray); margin-bottom: 20px; }
-    .modal-close { float: right; background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--gray); margin-top: -4px; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.7);
+      animation: slideUp .2s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(12px); opacity:0; } to { transform:none; opacity:1; } }
+    .modal-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; }
+    .modal-title { font-size: 1.1rem; font-weight: 800; display:flex; align-items:center; gap:8px; letter-spacing:-.3px; }
+    .modal-sub { font-size: .84rem; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: color .15s;
+    }
+    .modal-close:hover { color: var(--text); }
 
-    .loading-spinner { width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: var(--red2); border-radius: 50%; animation: spin .8s linear infinite; margin: 20px auto; }
+    .vote-confirm-detail {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .already-voted-state { text-align:center; padding:50px 20px; }
+    .already-voted-state .icon-wrap {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #0a2e14, #165a28);
+      border: 1px solid #2ea043;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #56d364;
+      margin: 0 auto 20px;
+    }
+    .already-voted-state h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+    .already-voted-state p { font-size: .88rem; color: var(--muted); margin-bottom: 24px; }
+
+    .loading-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--red2);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 32px auto;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .already-voted { text-align: center; padding: 40px 20px; }
-    .already-voted i { font-size: 3rem; color: var(--green); margin-bottom: 12px; display: block; }
-    .already-voted h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
-    .already-voted p { font-size: .88rem; color: var(--gray); }
+    .empty-results { text-align:center; padding:40px 20px; color:var(--muted); }
+    .empty-results i { font-size: 2.5rem; display:block; margin-bottom:12px; opacity:.5; }
 
-    .user-bar { background: #1a1f28; border-bottom: 1px solid var(--border); padding: 8px 16px; font-size: .82rem; color: var(--gray); display: flex; align-items: center; justify-content: space-between; }
-    .user-bar-info { display: flex; align-items: center; gap: 6px; }
-    .logout-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: .82rem; }
-    .logout-btn:hover { color: var(--red); }
+    .info-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .info-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .88rem;
+      color: #adbac7;
+      padding: 10px 14px;
+      background: var(--bg3);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .info-list li i { color: var(--green); flex-shrink:0; }
 
-    .name-entry { text-align: center; padding: 30px 20px; max-width: 400px; margin: 0 auto; }
-    .name-entry > i { font-size: 3rem; color: var(--red2); margin-bottom: 16px; display: block; }
-    .name-entry h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
-    .name-entry p { font-size: .88rem; color: var(--gray); margin-bottom: 24px; }
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: .78rem;
+      margin-top: 60px;
+      line-height: 1.8;
+    }
+    .footer-flag { display:inline-flex; gap:1px; align-items:center; vertical-align:middle; margin-right:4px; }
+    .footer-flag span { display:block; width:8px; height:14px; }
+    .footer-flag .r { background: #cc0000; }
+    .footer-flag .w { background: #ffffff; }
 
-    footer { background: var(--dark); color: #9ca3af; text-align: center; padding: 20px; font-size: .78rem; margin-top: 40px; }
-    footer strong { color: #fff; }
-    .flag-peru { display: inline-block; width: 24px; height: 16px; background: linear-gradient(to right, #cc0000 33%, #fff 33% 66%, #cc0000 66%); border-radius: 2px; vertical-align: middle; }
-
-    @media(max-width: 600px) {
-      .candidates-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-      .header-title { font-size: .95rem; }
-      .result-bar-wrap { display: none; }
-      .tabs { font-size: .82rem; }
-      .tab { padding: 8px 12px; }
+    @media(max-width:640px) {
+      .candidates-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; }
+      .header { padding: 0 14px; }
+      .header-title { font-size: .88rem; }
+      .header-flag { display:none; }
+      .result-bar-wrap { display:none; }
+      .container { padding: 20px 14px; }
+      .tab { padding: 8px 12px; font-size: .8rem; }
     }
   </style>
 </head>
@@ -164,22 +569,26 @@
 
 <header class="header">
   <div class="header-left">
-    <i class="fas fa-vote-yea header-logo"></i>
+    <div class="header-flag"></div>
+    <div class="header-logo-icon"><i class="fas fa-vote-yea"></i></div>
     <div>
       <div class="header-title">Voto Online Peru 2026</div>
       <div class="header-sub">Elecciones Generales &bull; 12 de Abril</div>
     </div>
   </div>
   <nav class="header-nav">
-    <a onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Resultados</a>
-    <a onclick="showTab('votar')" id="nav-votar" class="btn-votar-nav"><i class="fas fa-user"></i> Votar</a>
-    <a onclick="logout()" id="nav-logout" style="display:none;"><i class="fas fa-sign-out-alt"></i> Salir</a>
+    <button class="nav-btn" onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Resultados</button>
+    <button class="nav-btn" id="nav-votar" onclick="showTab('votar')"><i class="fas fa-check-circle"></i> Votar</button>
+    <button class="nav-btn" id="nav-logout" style="display:none;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
   </nav>
 </header>
 
-<div id="user-bar" class="user-bar" style="display:none;">
-  <div class="user-bar-info"><i class="fas fa-user-circle"></i><span id="user-name-display"></span></div>
-  <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+<div id="user-bar" class="user-bar">
+  <div class="user-bar-info">
+    <div class="user-avatar" id="user-avatar-initials"></div>
+    <span id="user-name-display"></span>
+  </div>
+  <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</button>
 </div>
 
 <main class="container">
@@ -192,32 +601,33 @@
   <div id="panel-votar" class="tab-panel active">
     <div id="not-logged-state">
       <div class="name-entry">
-        <i class="fas fa-vote-yea"></i>
+        <div class="entry-icon"><i class="fas fa-vote-yea"></i></div>
         <h3>Ingresa tu nombre para votar</h3>
-        <p>Solo necesitas tu nombre. Un voto por persona.</p>
+        <p>Solo necesitas tu nombre completo para participar. Un voto por persona.</p>
         <div class="form-group" style="text-align:left;">
-          <label>Tu nombre completo</label>
-          <input type="text" id="entry-name" placeholder="Ej: Juan Perez" onkeydown="if(event.key==='Enter')doRegister()"/>
+          <label>Nombre completo</label>
+          <input type="text" id="entry-name" placeholder="Ej: Juan Perez Garcia" onkeydown="if(event.key==='Enter')doRegister()"/>
         </div>
-        <div id="entry-error" class="alert alert-error" style="display:none;text-align:left;"><i class="fas fa-times-circle"></i><span></span></div>
+        <div id="entry-error" class="alert alert-error" style="display:none;text-align:left;"><i class="fas fa-circle-xmark"></i><span></span></div>
         <button class="btn btn-primary btn-full" onclick="doRegister()" id="entry-btn">
-          <i class="fas fa-arrow-right"></i> Continuar a Votar
+          <i class="fas fa-arrow-right"></i> Continuar a votar
         </button>
       </div>
     </div>
-    <div id="already-voted-state" class="already-voted" style="display:none;">
-      <i class="fas fa-check-circle"></i>
-      <h3>Ya emitiste tu voto</h3>
-      <p>Tu voto ha sido registrado correctamente.</p>
-      <br/>
-      <button class="btn btn-primary" onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Ver Resultados</button>
+
+    <div id="already-voted-state" class="already-voted-state" style="display:none;">
+      <div class="icon-wrap"><i class="fas fa-check"></i></div>
+      <h3>Voto registrado</h3>
+      <p>Tu voto ha sido emitido correctamente. Gracias por participar.</p>
+      <button class="btn btn-primary" onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Ver resultados en vivo</button>
     </div>
+
     <div id="vote-state" style="display:none;">
       <div class="section-title"><i class="fas fa-flag" style="color:var(--red)"></i> Selecciona tu candidato</div>
       <div class="section-sub">Elecciones Generales Peru 2026 &bull; Toca una tarjeta para seleccionar</div>
       <div class="alert alert-warn">
-        <i class="fas fa-exclamation-triangle"></i>
-        <div><strong>Importante:</strong> Una vez confirmado tu voto no podra ser modificado. Este sistema es solo para fines de sondeo.</div>
+        <i class="fas fa-triangle-exclamation"></i>
+        <div><strong>Importante:</strong> Una vez confirmado tu voto no podra ser modificado. Este sistema es un sondeo independiente.</div>
       </div>
       <div class="candidates-grid" id="candidates-grid"></div>
     </div>
@@ -225,12 +635,12 @@
 
   <div id="panel-resultados" class="tab-panel">
     <div class="section-title"><i class="fas fa-chart-line" style="color:var(--red)"></i> Resultados en Tiempo Real</div>
-    <div class="section-sub">Se actualiza cada 15 segundos</div>
+    <div class="section-sub">Actualizacion automatica cada 15 segundos</div>
     <div class="stats-row">
       <div class="stat-box"><div class="stat-box-num" id="stat-total">-</div><div class="stat-box-label">Total Votos</div></div>
-      <div class="stat-box"><div class="stat-box-num" id="stat-lider">-</div><div class="stat-box-label">Candidato Lider</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="stat-lider" style="font-size:1.1rem">-</div><div class="stat-box-label">Candidato Lider</div></div>
       <div class="stat-box"><div class="stat-box-num gray" id="stat-nulos">-</div><div class="stat-box-label">Votos Nulos</div></div>
-      <div class="stat-box"><div class="stat-box-num" id="stat-updated">-</div><div class="stat-box-label">Actualizado</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="stat-updated" style="font-size:1rem">-</div><div class="stat-box-label">Actualizado</div></div>
     </div>
     <div class="results-list" id="results-list"><div class="loading-spinner"></div></div>
   </div>
@@ -238,112 +648,341 @@
   <div id="panel-info" class="tab-panel">
     <div class="card">
       <div class="section-title"><i class="fas fa-shield-alt" style="color:var(--red)"></i> Como funciona este sistema</div>
-      <br/>
-      <p style="font-size:.9rem;line-height:1.7;color:#cbd5e1;">
-        Este es un sistema de sondeo independiente para las Elecciones Generales del Peru 2026. No es el sistema oficial de la ONPE.
+      <p style="font-size:.88rem;color:var(--muted);margin:14px 0 20px;line-height:1.7;">
+        Sondeo independiente para las Elecciones Generales del Peru 2026. Este sistema no es el sistema oficial de la ONPE ni tiene validez legal.
       </p>
-      <br/>
-      <ul style="font-size:.88rem;line-height:2;color:#cbd5e1;padding-left:20px;">
-        <li><i class="fas fa-check" style="color:var(--green)"></i> Solo ingresa tu nombre para participar</li>
-        <li><i class="fas fa-check" style="color:var(--green)"></i> Un solo voto por sesion</li>
-        <li><i class="fas fa-check" style="color:var(--green)"></i> Resultados en tiempo real</li>
-        <li><i class="fas fa-check" style="color:var(--green)"></i> Datos almacenados en Supabase</li>
+      <ul class="info-list">
+        <li><i class="fas fa-check-circle"></i> Solo ingresa tu nombre para participar</li>
+        <li><i class="fas fa-check-circle"></i> Un solo voto por sesion</li>
+        <li><i class="fas fa-check-circle"></i> Resultados en tiempo real</li>
+        <li><i class="fas fa-check-circle"></i> Datos almacenados de forma anonima en Supabase</li>
+        <li><i class="fas fa-check-circle"></i> Sin registro, sin correo, sin datos personales</li>
       </ul>
-      <br/>
-      <div class="alert alert-warn">
-        <i class="fas fa-exclamation-triangle"></i>
-        <div>Este sondeo no tiene validez legal. El voto oficial se realiza el 12 de abril de 2026 en los locales autorizados por la ONPE.</div>
+      <div class="alert alert-warn" style="margin-top:20px;">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div>El voto oficial se realiza el <strong>12 de abril de 2026</strong> en los locales autorizados por la ONPE. Este sondeo no reemplaza ni afecta ese proceso.</div>
       </div>
     </div>
   </div>
 </main>
 
 <div class="vote-confirm-bar" id="confirm-bar">
-  <div class="vote-selected-info">Seleccionaste: <span id="confirm-candidate-name">-</span></div>
+  <div>
+    <div class="confirm-label">Candidato seleccionado</div>
+    <div class="confirm-name" id="confirm-candidate-name">-</div>
+  </div>
   <button class="btn btn-primary" onclick="openVoteConfirm()"><i class="fas fa-check"></i> Confirmar Voto</button>
 </div>
 
 <div class="modal-overlay" id="modal-vote-confirm">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-vote-confirm')"><i class="fas fa-times"></i></button>
-    <div class="modal-title"><i class="fas fa-exclamation-triangle" style="color:#d97706"></i> Confirmar Voto</div>
-    <div class="modal-sub">Esta accion no puede deshacerse. Tu voto es permanente.</div>
-    <div id="vote-confirm-detail" style="background:#1a1f28;border-radius:10px;padding:16px;margin-bottom:16px;text-align:center;"></div>
-    <div id="vote-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-triangle-exclamation" style="color:#e3b341"></i> Confirmar Voto</div>
+      <button class="modal-close" onclick="closeModal('modal-vote-confirm')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-sub">Esta accion no puede deshacerse. Tu voto sera permanente.</div>
+    <div id="vote-confirm-detail" class="vote-confirm-detail"></div>
+    <div id="vote-error" class="alert alert-error" style="display:none;"><i class="fas fa-circle-xmark"></i><span></span></div>
     <div style="display:flex;gap:10px;">
       <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-vote-confirm')">Cancelar</button>
       <button class="btn btn-primary" style="flex:2" onclick="confirmVote()" id="vote-btn">
-        <i class="fas fa-check"></i> Si, Confirmar Voto
+        <i class="fas fa-check"></i> Si, confirmar
       </button>
     </div>
   </div>
 </div>
 
 <footer>
-  <span class="flag-peru"></span>
-  <br/><br/>
-  <strong>Voto Online Peru 2026</strong> &bull; Sondeo Independiente No Oficial<br/>
-  Los datos son almacenados de forma anonima. Este sistema no reemplaza el voto oficial de la ONPE.<br/>
-  Elecciones Generales &bull; 12 de Abril de 2026
+  <div>
+    <span class="footer-flag"><span class="r"></span><span class="w"></span><span class="r"></span></span>
+    <strong style="color:var(--text)">Voto Online Peru 2026</strong> &bull; Sondeo Independiente No Oficial
+  </div>
+  <div style="margin-top:4px;">Los datos son almacenados de forma anonima &bull; Este sistema no reemplaza el voto oficial de la ONPE</div>
+  <div style="margin-top:4px;">Elecciones Generales &bull; 12 de Abril de 2026</div>
 </footer>
 
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-
-
-
 const SUPABASE_URL = 'https://abmptuqnbmhrrwjykcnq.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibXB0dXFuYm1ocnJ3anlrY25xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTM4NzcsImV4cCI6MjA4OTk4OTg3N30.aAE6a2-D2beVhluk7C0fH9kM7H4SC-MCs3Ch0CRRUdI';
-
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const W = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
+
 const CANDIDATES = [
-  { id: 'fuerza_popular',      party: 'Fuerza Popular',              name: 'Keiko Fujimori',         color: '#cc0000', icon: 'fa-star',               logo: W+'Fuerza_popular.svg' },
-  { id: 'alianza_progreso',    party: 'Alianza Para el Progreso',    name: 'Cesar Acuna',            color: '#f97316', icon: 'fa-chart-line',         logo: W+'APP_logo.png' },
-  { id: 'renovacion_popular',  party: 'Renovacion Popular',          name: 'Rafael Lopez Aliaga',    color: '#2563eb', icon: 'fa-rotate',             logo: W+'Renovaci%C3%B3n_Popular_logo.png' },
-  { id: 'avanza_pais',         party: 'Avanza Pais',                 name: 'Jose Williams Zapata',   color: '#7c3aed', icon: 'fa-forward',            logo: W+'Avanza_Pa%C3%ADs_logo.png' },
-  { id: 'somos_peru',          party: 'Somos Peru',                  name: 'George Forsyth',         color: '#16a34a', icon: 'fa-leaf',               logo: W+'Somos_Per%C3%BA_logo.svg' },
-  { id: 'peru_libre',          party: 'Peru Libre',                  name: 'Vladimir Cerron',        color: '#dc2626', icon: 'fa-dove',               logo: W+'Peru_libre_logo.png' },
-  { id: 'podemos_peru',        party: 'Podemos Peru',                name: 'Jose Luna Galvez',       color: '#0891b2', icon: 'fa-hand-fist',          logo: W+'Podemos_Per%C3%BA_logo.png' },
-  { id: 'juntos_peru',         party: 'Juntos por el Peru',          name: 'Roberto Sanchez',        color: '#dc7c02', icon: 'fa-people-group',       logo: W+'Logo_juntos_por_el_Peru.svg' },
-  { id: 'partido_morado',      party: 'Partido Morado',              name: 'Mesias Guevara',         color: '#7c3aed', icon: 'fa-circle',             logo: W+'Partido_Morado_logo.svg' },
-  { id: 'apra',                party: 'Partido Aprista Peruano',     name: 'Enrique Valderrama',     color: '#dc2626', icon: 'fa-sun',                logo: W+'APRA_logo.svg' },
-  { id: 'accion_popular',      party: 'Accion Popular',              name: 'Fernando Belaunde',      color: '#e84c13', icon: 'fa-bolt',               logo: W+'Acci%C3%B3n_Popular_%28Peru%29_logo.svg' },
-  { id: 'union_peru',          party: 'Union por el Peru',           name: 'Antauro Humala',         color: '#b91c1c', icon: 'fa-flag',               logo: W+'Uni%C3%B3n_por_el_Per%C3%BA_logo.svg' },
-  { id: 'ahora_nacion',        party: 'Ahora Nacion',                name: 'Alfonso Lopez-Chau',     color: '#059669', icon: 'fa-flag',               logo: '' },
-  { id: 'buen_gobierno',       party: 'Partido del Buen Gobierno',   name: 'Jorge Nieto',            color: '#0284c7', icon: 'fa-scale-balanced',     logo: '' },
-  { id: 'un_camino',           party: 'Un Camino Diferente',         name: 'Rosario Fernandez',      color: '#9333ea', icon: 'fa-road',               logo: '' },
-  { id: 'patriotico',          party: 'Partido Patriotico del Peru', name: 'Herbert Caller',         color: '#1d4ed8', icon: 'fa-shield',             logo: '' },
-  { id: 'frente_esperanza',    party: 'Frente de la Esperanza',      name: 'Fernando Olivera',       color: '#ca8a04', icon: 'fa-seedling',           logo: '' },
-  { id: 'primero_gente',       party: 'Primero la Gente',            name: 'Marisol Perez Tello',    color: '#16a34a', icon: 'fa-users',              logo: '' },
-  { id: 'progresemos',         party: 'Progresemos',                 name: 'Paul Jaimes',            color: '#0369a1', icon: 'fa-arrow-up-right-dots', logo: '' },
-  { id: 'fe_peru',             party: 'Fe en el Peru',               name: 'Alvaro Paz de la Barra', color: '#b45309', icon: 'fa-cross',              logo: '' },
-  { id: 'pais_todos',          party: 'Pais Para Todos',             name: 'Carlos Alvarez',         color: '#0f766e', icon: 'fa-globe-americas',     logo: '' },
-  { id: 'integridad',          party: 'Integridad Democratica',      name: 'Wolfgang Grozo',         color: '#1e40af', icon: 'fa-handshake',          logo: '' },
-  { id: 'obras',               party: 'Partido Civico Obras',        name: 'Ricardo Belmont',        color: '#dc2626', icon: 'fa-helmet-safety',      logo: '' },
-  { id: 'pte',                 party: 'PTE Peru',                    name: 'Napoleon Becerra',       color: '#15803d', icon: 'fa-mountain',           logo: '' },
-  { id: 'cooperacion',         party: 'Cooperacion Popular',         name: 'Yonhy Lescano',          color: '#0369a1', icon: 'fa-hands-helping',      logo: '' },
-  { id: 'peru_primero',        party: 'Peru Primero',                name: 'Mario Vizcarra',         color: '#be185d', icon: 'fa-medal',              logo: '' },
-  { id: 'democrata_verde',     party: 'Partido Democrata Verde',     name: 'Alex Gonzales',          color: '#16a34a', icon: 'fa-tree',               logo: '' },
-  { id: 'unidad_nacional',     party: 'Unidad Nacional',             name: 'Roberto Chiabra',        color: '#0f172a', icon: 'fa-link',               logo: '' },
-  { id: 'libertad_popular',    party: 'Libertad Popular',            name: 'Rafael Belaunde',        color: '#b45309', icon: 'fa-unlock',             logo: '' },
-  { id: 'si_creo',             party: 'Partido SiCreo',              name: 'Carlos Espa',            color: '#7e22ce', icon: 'fa-lightbulb',          logo: '' },
-  { id: 'salvemos_peru',       party: 'Salvemos al Peru',            name: 'Antonio Ortiz',          color: '#0369a1', icon: 'fa-life-ring',          logo: '' },
-  { id: 'fuerza_libertad',     party: 'Fuerza y Libertad',           name: 'Fiorella Molinelli',     color: '#b91c1c', icon: 'fa-fire',               logo: '' },
-  { id: 'peru_moderno',        party: 'Peru Moderno',                name: 'Carlos Jaico',           color: '#0284c7', icon: 'fa-city',               logo: '' },
-  { id: 'prin',                party: 'Partido PRIN',                name: 'Walter Chirinos',        color: '#7c3aed', icon: 'fa-p',                  logo: '' },
-  { id: 'democrata_unido',     party: 'Democrata Unido Peru',        name: 'Charlie Carrasco',       color: '#0f766e', icon: 'fa-circle-half-stroke', logo: '' },
-  { id: 'voto_nulo',           party: 'Voto Nulo / En Blanco',       name: 'Ninguno',                color: '#6b7280', icon: 'fa-ban',                logo: '', nulo: true },
+  {
+    id: 'fuerza_popular',
+    party: 'Fuerza Popular',
+    name: 'Keiko Fujimori',
+    color: '#e05a00',
+    icon: 'fa-star',
+    logo: W + 'Fuerza_popular.svg'
+  },
+  {
+    id: 'alianza_progreso',
+    party: 'Alianza Para el Progreso',
+    name: 'Cesar Acuna',
+    color: '#e67e00',
+    icon: 'fa-chart-line',
+    logo: W + 'APP_logo.png'
+  },
+  {
+    id: 'renovacion_popular',
+    party: 'Renovacion Popular',
+    name: 'Rafael Lopez Aliaga',
+    color: '#1a56cc',
+    icon: 'fa-rotate',
+    logo: W + 'Renovaci%C3%B3n_Popular_logo.png'
+  },
+  {
+    id: 'avanza_pais',
+    party: 'Avanza Pais',
+    name: 'Jose Williams',
+    color: '#7c3aed',
+    icon: 'fa-forward',
+    logo: W + 'Avanza_Pa%C3%ADs_logo.png'
+  },
+  {
+    id: 'somos_peru',
+    party: 'Somos Peru',
+    name: 'George Forsyth',
+    color: '#16a34a',
+    icon: 'fa-leaf',
+    logo: W + 'Logo_Partido_Democr%C3%A1tico_Somos_Per%C3%BA.svg'
+  },
+  {
+    id: 'peru_libre',
+    party: 'Peru Libre',
+    name: 'Vladimir Cerron',
+    color: '#cc0000',
+    icon: 'fa-dove',
+    logo: W + 'Partido_Pol%C3%ADtico_Nacional_Per%C3%BA_Libre.png'
+  },
+  {
+    id: 'podemos_peru',
+    party: 'Podemos Peru',
+    name: 'Jose Luna Galvez',
+    color: '#0369a1',
+    icon: 'fa-hand-fist',
+    logo: W + 'Logo_Podemos_Per%C3%BA.png'
+  },
+  {
+    id: 'juntos_peru',
+    party: 'Juntos por el Peru',
+    name: 'Roberto Sanchez',
+    color: '#c05a00',
+    icon: 'fa-people-group',
+    logo: W + 'Logo_juntos_por_el_Peru.svg'
+  },
+  {
+    id: 'partido_morado',
+    party: 'Partido Morado',
+    name: 'Mesias Guevara',
+    color: '#7c3aed',
+    icon: 'fa-circle',
+    logo: W + 'Partido_Morado_logo.svg'
+  },
+  {
+    id: 'apra',
+    party: 'Partido Aprista Peruano',
+    name: 'Enrique Valderrama',
+    color: '#cc0000',
+    icon: 'fa-sun',
+    logo: W + 'APRA_logo.svg'
+  },
+  {
+    id: 'accion_popular',
+    party: 'Accion Popular',
+    name: 'Fernando Belaunde',
+    color: '#d04810',
+    icon: 'fa-bolt',
+    logo: W + 'Acci%C3%B3n_Popular_%28Peru%29_logo.svg'
+  },
+  {
+    id: 'union_peru',
+    party: 'Union por el Peru',
+    name: 'Antauro Humala',
+    color: '#991818',
+    icon: 'fa-flag',
+    logo: W + 'Uni%C3%B3n_por_el_Per%C3%BA_logo.svg'
+  },
+  {
+    id: 'ahora_nacion',
+    party: 'Ahora Nacion',
+    name: 'Alfonso Lopez-Chau',
+    color: '#0a7c5c',
+    icon: 'fa-flag'
+  },
+  {
+    id: 'buen_gobierno',
+    party: 'Partido del Buen Gobierno',
+    name: 'Jorge Nieto',
+    color: '#0369a1',
+    icon: 'fa-scale-balanced'
+  },
+  {
+    id: 'libertad_popular',
+    party: 'Libertad Popular',
+    name: 'Rafael Belaunde',
+    color: '#9a5c00',
+    icon: 'fa-unlock'
+  },
+  {
+    id: 'patriotico',
+    party: 'Partido Patriotico del Peru',
+    name: 'Herbert Caller',
+    color: '#1d4fa8',
+    icon: 'fa-shield'
+  },
+  {
+    id: 'frente_esperanza',
+    party: 'Frente de la Esperanza',
+    name: 'Fernando Olivera',
+    color: '#b07000',
+    icon: 'fa-seedling'
+  },
+  {
+    id: 'primero_gente',
+    party: 'Primero la Gente',
+    name: 'Marisol Perez Tello',
+    color: '#16a34a',
+    icon: 'fa-users'
+  },
+  {
+    id: 'progresemos',
+    party: 'Progresemos',
+    name: 'Paul Jaimes',
+    color: '#0369a1',
+    icon: 'fa-arrow-up-right-dots'
+  },
+  {
+    id: 'fe_peru',
+    party: 'Fe en el Peru',
+    name: 'Alvaro Paz de la Barra',
+    color: '#9a5000',
+    icon: 'fa-cross'
+  },
+  {
+    id: 'pais_todos',
+    party: 'Pais Para Todos',
+    name: 'Carlos Alvarez',
+    color: '#0a7c70',
+    icon: 'fa-globe-americas'
+  },
+  {
+    id: 'integridad',
+    party: 'Integridad Democratica',
+    name: 'Wolfgang Grozo',
+    color: '#1e40af',
+    icon: 'fa-handshake'
+  },
+  {
+    id: 'obras',
+    party: 'Partido Civico Obras',
+    name: 'Ricardo Belmont',
+    color: '#b91c1c',
+    icon: 'fa-helmet-safety'
+  },
+  {
+    id: 'pte',
+    party: 'PTE Peru',
+    name: 'Napoleon Becerra',
+    color: '#15803d',
+    icon: 'fa-mountain'
+  },
+  {
+    id: 'cooperacion',
+    party: 'Cooperacion Popular',
+    name: 'Yonhy Lescano',
+    color: '#0369a1',
+    icon: 'fa-hands-helping'
+  },
+  {
+    id: 'peru_primero',
+    party: 'Peru Primero',
+    name: 'Mario Vizcarra',
+    color: '#be185d',
+    icon: 'fa-medal'
+  },
+  {
+    id: 'democrata_verde',
+    party: 'Partido Democrata Verde',
+    name: 'Alex Gonzales',
+    color: '#16a34a',
+    icon: 'fa-tree'
+  },
+  {
+    id: 'unidad_nacional',
+    party: 'Unidad Nacional',
+    name: 'Roberto Chiabra',
+    color: '#1e3a5f',
+    icon: 'fa-link'
+  },
+  {
+    id: 'si_creo',
+    party: 'Partido SiCreo',
+    name: 'Carlos Espa',
+    color: '#7e22ce',
+    icon: 'fa-lightbulb'
+  },
+  {
+    id: 'salvemos_peru',
+    party: 'Salvemos al Peru',
+    name: 'Antonio Ortiz',
+    color: '#0369a1',
+    icon: 'fa-life-ring'
+  },
+  {
+    id: 'fuerza_libertad',
+    party: 'Fuerza y Libertad',
+    name: 'Fiorella Molinelli',
+    color: '#991818',
+    icon: 'fa-fire'
+  },
+  {
+    id: 'peru_moderno',
+    party: 'Peru Moderno',
+    name: 'Carlos Jaico',
+    color: '#0284c7',
+    icon: 'fa-city'
+  },
+  {
+    id: 'prin',
+    party: 'Partido PRIN',
+    name: 'Walter Chirinos',
+    color: '#6d28d9',
+    icon: 'fa-p'
+  },
+  {
+    id: 'democrata_unido',
+    party: 'Democrata Unido Peru',
+    name: 'Charlie Carrasco',
+    color: '#0a6e60',
+    icon: 'fa-circle-half-stroke'
+  },
+  {
+    id: 'peru_accion',
+    party: 'Peru Accion',
+    name: 'Francisco Diez-Canseco',
+    color: '#1e40af',
+    icon: 'fa-bolt-lightning'
+  },
+  {
+    id: 'voto_nulo',
+    party: 'Voto Nulo / En Blanco',
+    name: 'Ninguno',
+    color: '#40474f',
+    icon: 'fa-ban',
+    nulo: true
+  },
 ];
 
 let currentUser = null;
 let selectedCandidate = null;
 let hasVoted = false;
 let resultsInterval = null;
-
 
 function showError(id, msg) {
   const el = document.getElementById(id);
@@ -355,10 +994,10 @@ function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 window.closeModal = closeModal;
 
-
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name)?.classList.add('active');
   document.getElementById('panel-' + name)?.classList.add('active');
   if (name === 'resultados') {
@@ -371,7 +1010,6 @@ function showTab(name) {
 }
 window.showTab = showTab;
 
-
 function buildCandidatesGrid() {
   const grid = document.getElementById('candidates-grid');
   grid.innerHTML = '';
@@ -381,32 +1019,34 @@ function buildCandidatesGrid() {
     card.dataset.id = c.id;
     card.onclick = () => selectCandidate(c.id);
 
-    const iconDiv = `<div class="cand-icon" style="background:${c.color}"><i class="fas ${c.icon}"></i></div>`;
+    const check = '<div class="candidate-check"><i class="fas fa-check"></i></div>';
+    const party = `<div class="candidate-party">${c.party}</div>`;
+    const name = `<div class="candidate-name">${c.nulo ? '<i class="fas fa-ban" style="margin-right:4px;"></i>Voto Nulo' : c.name}</div>`;
 
     if (c.logo) {
+      const wrap = document.createElement('div');
+      wrap.className = 'cand-logo-wrap';
       const img = document.createElement('img');
       img.src = c.logo;
       img.alt = c.party;
-      img.style.cssText = 'width:80px;height:80px;object-fit:contain;margin:0 auto 10px;display:block;border-radius:6px;padding:3px;background:rgba(255,255,255,0.06);';
       const fallback = document.createElement('div');
-      fallback.className = 'cand-icon';
-      fallback.style.cssText = `background:${c.color};display:none;`;
+      fallback.className = 'cand-icon-fallback';
+      fallback.style.background = c.color;
+      fallback.style.display = 'none';
       fallback.innerHTML = `<i class="fas ${c.icon}"></i>`;
-      img.onerror = () => { img.style.display = 'none'; fallback.style.display = 'flex'; };
-
-      card.innerHTML = `<div class="candidate-check"><i class="fas fa-check"></i></div>`;
-      card.appendChild(img);
-      card.appendChild(fallback);
-      card.insertAdjacentHTML('beforeend', `
-        <div class="candidate-party">${c.party}</div>
-        <div class="candidate-name">${c.nulo ? '<i class="fas fa-ban"></i> Voto Nulo' : c.name}</div>
-      `);
+      img.onerror = () => {
+        wrap.replaceWith(fallback);
+        fallback.style.display = 'flex';
+      };
+      wrap.appendChild(img);
+      card.innerHTML = check;
+      card.appendChild(wrap);
+      card.insertAdjacentHTML('beforeend', party + name);
     } else {
       card.innerHTML = `
-        <div class="candidate-check"><i class="fas fa-check"></i></div>
-        ${iconDiv}
-        <div class="candidate-party">${c.party}</div>
-        <div class="candidate-name">${c.nulo ? '<i class="fas fa-ban"></i> Voto Nulo' : c.name}</div>
+        ${check}
+        <div class="cand-icon-fallback" style="background:${c.color}"><i class="fas ${c.icon}"></i></div>
+        ${party}${name}
       `;
     }
     grid.appendChild(card);
@@ -414,22 +1054,25 @@ function buildCandidatesGrid() {
 }
 
 function selectCandidate(id) {
-  if (!currentUser) { showTab('votar'); return; }
-  if (hasVoted) return;
+  if (!currentUser || hasVoted) return;
   selectedCandidate = id;
   document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
   document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
   const cand = CANDIDATES.find(c => c.id === id);
   document.getElementById('confirm-candidate-name').textContent =
-    cand?.nulo ? 'Voto Nulo / En Blanco' : `${cand?.name} (${cand?.party})`;
+    cand?.nulo ? 'Voto Nulo / En Blanco' : `${cand?.name} — ${cand?.party}`;
   document.getElementById('confirm-bar').classList.add('show');
 }
 
+async function generateHash(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2,'0')).join('');
+}
 
 async function doRegister() {
   const name = document.getElementById('entry-name').value.trim();
   hideError('entry-error');
-  if (!name || name.length < 2) { showError('entry-error', 'Ingresa tu nombre completo'); return; }
+  if (!name || name.length < 2) { showError('entry-error', 'Ingresa tu nombre completo (minimo 2 caracteres)'); return; }
   const btn = document.getElementById('entry-btn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
@@ -444,7 +1087,7 @@ async function doRegister() {
     showError('entry-error', e.message);
   }
   btn.disabled = false;
-  btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a Votar';
+  btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a votar';
 }
 window.doRegister = doRegister;
 
@@ -452,12 +1095,13 @@ function setCurrentUser(user) {
   currentUser = user;
   document.getElementById('nav-votar').style.display = 'none';
   document.getElementById('nav-logout').style.display = '';
-  document.getElementById('user-bar').style.display = '';
+  document.getElementById('user-bar').style.display = 'flex';
   document.getElementById('user-name-display').textContent = user.name;
+  const initials = user.name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  document.getElementById('user-avatar-initials').textContent = initials;
   document.getElementById('not-logged-state').style.display = 'none';
   checkVoted();
 }
-
 
 async function checkVoted() {
   if (!currentUser) return;
@@ -476,19 +1120,25 @@ function showAlreadyVoted() {
   document.getElementById('confirm-bar').classList.remove('show');
 }
 
-
 function openVoteConfirm() {
   if (!selectedCandidate) return;
   const cand = CANDIDATES.find(c => c.id === selectedCandidate);
-  const logoHtml = cand.logo
-    ? `<img src="${cand.logo}" style="width:70px;height:70px;object-fit:contain;border-radius:6px;margin:0 auto 8px;display:block;padding:3px;background:rgba(255,255,255,0.06);"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-       ><div style="width:70px;height:70px;border-radius:6px;background:${cand.color};display:none;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;margin:0 auto 8px;"><i class="fas ${cand.icon}"></i></div>`
-    : `<div style="width:70px;height:70px;border-radius:6px;background:${cand.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;margin:0 auto 8px;"><i class="fas ${cand.icon}"></i></div>`;
+
+  let logoHtml;
+  if (cand.logo) {
+    logoHtml = `
+      <img src="${cand.logo}" style="width:64px;height:64px;object-fit:contain;border-radius:8px;margin:0 auto 10px;display:block;background:rgba(255,255,255,.05);padding:4px;"
+        onerror="this.style.display='none';document.getElementById('confirm-fallback-icon').style.display='flex'">
+      <div id="confirm-fallback-icon" style="width:64px;height:64px;border-radius:8px;background:${cand.color};display:none;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;margin:0 auto 10px;"><i class="fas ${cand.icon}"></i></div>
+    `;
+  } else {
+    logoHtml = `<div style="width:64px;height:64px;border-radius:8px;background:${cand.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;margin:0 auto 10px;"><i class="fas ${cand.icon}"></i></div>`;
+  }
+
   document.getElementById('vote-confirm-detail').innerHTML = `
     ${logoHtml}
-    <div style="font-size:.72rem;font-weight:700;color:${cand.color};text-transform:uppercase;">${cand.party}</div>
-    <div style="font-size:1rem;font-weight:700;margin-top:4px;color:var(--dark);">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
+    <div style="font-size:.68rem;font-weight:700;color:${cand.nulo ? '#565e6a' : 'var(--red2)'};text-transform:uppercase;letter-spacing:.7px;">${cand.party}</div>
+    <div style="font-size:1rem;font-weight:800;margin-top:5px;color:var(--text);">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
   `;
   hideError('vote-error');
   openModal('modal-vote-confirm');
@@ -500,10 +1150,14 @@ async function confirmVote() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
   try {
-
     const { data: existing } = await db.from('votes').select('id').eq('user_id', currentUser.id).maybeSingle();
     if (existing) throw new Error('Ya has emitido tu voto');
-    const { error } = await db.from('votes').insert([{ user_id: currentUser.id, candidate_id: selectedCandidate }]);
+    const ipHash = await generateHash(currentUser.id + navigator.userAgent + Date.now().toString().slice(0,-4));
+    const { error } = await db.from('votes').insert([{
+      user_id: currentUser.id,
+      candidate_id: selectedCandidate,
+      ip_hash: ipHash
+    }]);
     if (error) throw new Error(error.message);
     closeModal('modal-vote-confirm');
     hasVoted = true;
@@ -512,11 +1166,10 @@ async function confirmVote() {
   } catch (e) {
     showError('vote-error', e.message);
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-check"></i> Si, Confirmar Voto';
+    btn.innerHTML = '<i class="fas fa-check"></i> Si, confirmar';
   }
 }
 window.confirmVote = confirmVote;
-
 
 async function loadResults() {
   const list = document.getElementById('results-list');
@@ -527,26 +1180,29 @@ async function loadResults() {
     (data || []).forEach(v => { counts[v.candidate_id] = (counts[v.candidate_id] || 0) + 1; });
     const results = Object.entries(counts).map(([candidate_id, count]) => ({ candidate_id, count }));
     const total = results.reduce((s, r) => s + r.count, 0);
-
     const nuloCount = counts['voto_nulo'] || 0;
+
     document.getElementById('stat-total').textContent = total.toLocaleString('es-PE');
     document.getElementById('stat-nulos').textContent = nuloCount.toLocaleString('es-PE');
-    document.getElementById('stat-updated').textContent = new Date().toLocaleTimeString('es-PE');
+    document.getElementById('stat-updated').textContent = new Date().toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
 
     const sorted = [...results].sort((a, b) => b.count - a.count);
     const top = sorted.find(r => r.candidate_id !== 'voto_nulo');
     if (top) {
       const c = CANDIDATES.find(x => x.id === top.candidate_id);
-      document.getElementById('stat-lider').textContent = c ? c.name.split(' ')[0] : '-';
+      document.getElementById('stat-lider').textContent = c ? c.name.split(' ').slice(0,2).join(' ') : '-';
     } else {
       document.getElementById('stat-lider').textContent = '-';
     }
 
     list.innerHTML = '';
     if (sorted.length === 0) {
-      list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)"><i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px"></i>Aun no hay votos registrados</div>';
+      list.innerHTML = '<div class="empty-results"><i class="fas fa-inbox"></i>Aun no hay votos registrados</div>';
       return;
     }
+
+    const rankClasses = ['gold', 'silver', 'bronze'];
+
     sorted.forEach((r, i) => {
       const cand = CANDIDATES.find(c => c.id === r.candidate_id);
       if (!cand) return;
@@ -554,35 +1210,46 @@ async function loadResults() {
       const item = document.createElement('div');
       item.className = 'result-item' + (cand.nulo ? ' nulo' : '');
 
-      const iconEl = cand.logo
-        ? `<img src="${cand.logo}" style="width:44px;height:44px;object-fit:contain;border-radius:4px;flex-shrink:0;padding:2px;background:rgba(255,255,255,0.06);"
-             onerror="this.outerHTML='<div class=\\'result-icon\\' style=\\'background:${cand.color}\\'><i class=\\'fas ${cand.icon}\\'></i></div>'">`
-        : `<div class="result-icon" style="background:${cand.color}"><i class="fas ${cand.icon}"></i></div>`;
+      let iconHtml;
+      if (cand.logo) {
+        iconHtml = `
+          <div class="result-logo-wrap">
+            <img src="${cand.logo}" alt="${cand.party}"
+              onerror="this.parentElement.outerHTML='<div class=\\'result-icon-fallback\\' style=\\'background:${cand.color}\\'><i class=\\'fas ${cand.icon}\\'></i></div>'">
+          </div>
+        `;
+      } else {
+        iconHtml = `<div class="result-icon-fallback" style="background:${cand.color}"><i class="fas ${cand.icon}"></i></div>`;
+      }
 
+      const rankClass = i < 3 ? rankClasses[i] : '';
       item.innerHTML = `
-        <div class="result-rank">${i + 1}</div>
-        ${iconEl}
+        <div class="result-rank ${rankClass}">${i + 1}</div>
+        ${iconHtml}
         <div class="result-info">
           <div class="result-party">${cand.party}</div>
           <div class="result-name">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
-          <div class="result-votes">${r.count.toLocaleString('es-PE')} votos</div>
+          <div class="result-votes">${r.count.toLocaleString('es-PE')} ${r.count === 1 ? 'voto' : 'votos'}</div>
         </div>
         <div class="result-bar-wrap">
-          <div class="result-bar"><div class="result-bar-fill${cand.nulo ? ' gray' : ''}" style="width:${pct}%"></div></div>
+          <div class="result-bar">
+            <div class="result-bar-fill${cand.nulo ? ' gray' : ''}" style="width:${pct}%"></div>
+          </div>
         </div>
         <div class="result-pct">${pct}%</div>
       `;
       list.appendChild(item);
     });
   } catch (e) {
-    list.innerHTML = '<div style="text-align:center;color:var(--gray);padding:20px"><i class="fas fa-triangle-exclamation"></i> Error cargando resultados</div>';
+    list.innerHTML = '<div class="empty-results"><i class="fas fa-triangle-exclamation"></i>Error cargando resultados</div>';
   }
 }
 
-
 function logout() {
   localStorage.removeItem('voto_user');
-  currentUser = null; hasVoted = false; selectedCandidate = null;
+  currentUser = null;
+  hasVoted = false;
+  selectedCandidate = null;
   document.getElementById('nav-votar').style.display = '';
   document.getElementById('nav-logout').style.display = 'none';
   document.getElementById('user-bar').style.display = 'none';
@@ -592,9 +1259,9 @@ function logout() {
   document.getElementById('confirm-bar').classList.remove('show');
   document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('entry-name').value = '';
+  hideError('entry-error');
 }
 window.logout = logout;
-
 
 function restoreSession() {
   try {
@@ -602,7 +1269,6 @@ function restoreSession() {
     if (saved) setCurrentUser(JSON.parse(saved));
   } catch (e) {}
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   buildCandidatesGrid();
