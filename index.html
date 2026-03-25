@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voto Online Peru 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{
+      --red:#cc0000;--red2:#e60000;--white:#fff;--light:#f5f5f5;
+      --gray:#6b7280;--dark:#111827;--border:#d1d5db;
+      --green:#16a34a;--blue:#2563eb;--shadow:0 2px 8px rgba(0,0,0,.12);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--light);color:var(--dark);}
+    a{color:var(--blue);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .header{
+      background:linear-gradient(135deg,#cc0000,#8b0000);
+      color:#fff;padding:14px 20px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 2px 8px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;
+    }
+    .header-left{display:flex;align-items:center;gap:12px;}
+    .header-logo{font-size:1.5rem;color:#fff;}
+    .header-title{font-size:1.1rem;font-weight:700;line-height:1.2;}
+    .header-sub{font-size:.72rem;opacity:.85;}
+    .header-nav{display:flex;gap:12px;align-items:center;}
+    .header-nav a{color:#fff;font-size:.82rem;font-weight:600;padding:6px 12px;border-radius:6px;transition:background .2s;}
+    .header-nav a:hover{background:rgba(255,255,255,.18);text-decoration:none;}
+    .btn-register-nav{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);}
+
+    .container{max-width:1100px;margin:0 auto;padding:20px 16px;}
+
+    .tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px;overflow-x:auto;}
+    .tab{padding:10px 20px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--gray);
+         border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+    .tab.active{color:var(--red2);border-bottom-color:var(--red2);}
+    .tab:hover:not(.active){color:var(--dark);}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    .section-title{font-size:1.2rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+    .section-sub{font-size:.83rem;color:var(--gray);margin-bottom:20px;}
+
+    .alert{padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:.88rem;display:flex;align-items:flex-start;gap:10px;}
+    .alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;}
+    .alert-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+    .alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;}
+    .alert-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;}
+    .alert i{margin-top:1px;flex-shrink:0;}
+
+    .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+
+    .form-group{margin-bottom:16px;}
+    .form-group label{display:block;font-size:.85rem;font-weight:600;color:var(--dark);margin-bottom:6px;}
+    .form-group input,.form-group select{
+      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
+      font-size:.9rem;transition:border .2s;background:#fff;
+    }
+    .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--red2);box-shadow:0 0 0 3px rgba(204,0,0,.08);}
+    .form-group .hint{font-size:.75rem;color:var(--gray);margin-top:4px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:8px;
+         font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-primary{background:var(--red2);color:#fff;}
+    .btn-primary:hover{background:var(--red);transform:translateY(-1px);}
+    .btn-primary:disabled{background:#9ca3af;cursor:not-allowed;transform:none;}
+    .btn-secondary{background:var(--light);color:var(--dark);border:1px solid var(--border);}
+    .btn-secondary:hover{background:#e5e7eb;}
+    .btn-green{background:var(--green);color:#fff;}
+    .btn-green:hover{background:#15803d;}
+    .btn-full{width:100%;justify-content:center;}
+
+    .candidates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
+    .candidate-card{
+      background:#fff;border:2px solid var(--border);border-radius:12px;padding:16px 12px;
+      text-align:center;cursor:pointer;transition:all .2s;position:relative;
+    }
+    .candidate-card:hover{border-color:var(--red2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(204,0,0,.12);}
+    .candidate-card.selected{border-color:var(--red2);background:#fff5f5;box-shadow:0 0 0 3px rgba(204,0,0,.15);}
+    .candidate-card.nulo{border-color:#6b7280;background:#f9fafb;}
+    .candidate-card.nulo:hover{border-color:#374151;background:#f3f4f6;}
+    .candidate-card.nulo.selected{border-color:#374151;background:#f3f4f6;box-shadow:0 0 0 3px rgba(107,114,128,.2);}
+    .candidate-check{
+      position:absolute;top:8px;right:8px;width:22px;height:22px;
+      background:var(--red2);color:#fff;border-radius:50%;
+      display:none;align-items:center;justify-content:center;font-size:.65rem;
+    }
+    .candidate-card.selected .candidate-check{display:flex;}
+    .candidate-card.nulo.selected .candidate-check{background:#374151;}
+    .party-logo{
+      width:80px;height:80px;object-fit:contain;margin:0 auto 10px;
+      display:block;border-radius:6px;
+    }
+    .party-logo-placeholder{
+      width:80px;height:80px;margin:0 auto 10px;display:flex;
+      align-items:center;justify-content:center;border-radius:6px;
+      font-size:1.8rem;color:#fff;font-weight:900;
+    }
+    .candidate-party{font-size:.65rem;font-weight:700;color:var(--red2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+    .candidate-name{font-size:.82rem;font-weight:600;color:var(--dark);line-height:1.3;}
+    .candidate-card.nulo .candidate-party{color:#4b5563;}
+
+    .vote-confirm-bar{
+      position:sticky;bottom:0;background:#fff;border-top:2px solid var(--border);
+      padding:12px 20px;display:none;align-items:center;justify-content:space-between;
+      box-shadow:0 -4px 12px rgba(0,0,0,.08);gap:12px;flex-wrap:wrap;z-index:50;
+    }
+    .vote-confirm-bar.show{display:flex;}
+    .vote-selected-info{font-size:.9rem;font-weight:600;}
+    .vote-selected-info span{color:var(--red2);}
+
+    .results-list{display:flex;flex-direction:column;gap:10px;}
+    .result-item{
+      display:flex;align-items:center;gap:12px;
+      background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;
+    }
+    .result-rank{font-size:.85rem;font-weight:700;color:var(--gray);width:24px;text-align:center;}
+    .result-logo{width:44px;height:44px;object-fit:contain;border-radius:4px;flex-shrink:0;}
+    .result-logo-ph{width:44px;height:44px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.9rem;}
+    .result-info{flex:1;min-width:0;}
+    .result-party{font-size:.75rem;color:var(--red2);font-weight:700;text-transform:uppercase;}
+    .result-name{font-size:.88rem;font-weight:600;color:var(--dark);}
+    .result-bar-wrap{flex:2;min-width:80px;}
+    .result-bar{height:10px;border-radius:5px;background:#e5e7eb;overflow:hidden;}
+    .result-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#cc0000,#e60000);transition:width 1s ease;}
+    .result-bar-fill.gray{background:#6b7280;}
+    .result-pct{font-size:.82rem;font-weight:700;color:var(--dark);min-width:44px;text-align:right;}
+    .result-votes{font-size:.72rem;color:var(--gray);}
+    .result-item.nulo .result-party{color:#4b5563;}
+    .result-item.nulo .result-bar-fill{background:#6b7280;}
+
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+    .stat-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
+    .stat-box-num{font-size:1.6rem;font-weight:800;color:var(--red2);}
+    .stat-box-num.gray{color:var(--gray);}
+    .stat-box-label{font-size:.72rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+      display:none;align-items:center;justify-content:center;padding:16px;
+    }
+    .modal-overlay.open{display:flex;}
+    .modal{background:#fff;border-radius:16px;padding:28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+    .modal-title{font-size:1.2rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+    .modal-sub{font-size:.85rem;color:var(--gray);margin-bottom:20px;}
+    .modal-close{float:right;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--gray);margin-top:-4px;}
+
+    .otp-inputs{display:flex;gap:8px;justify-content:center;margin:20px 0;}
+    .otp-input{
+      width:46px;height:52px;text-align:center;font-size:1.4rem;font-weight:700;
+      border:2px solid var(--border);border-radius:10px;transition:border .2s;
+    }
+    .otp-input:focus{outline:none;border-color:var(--red2);}
+
+    .captcha-wrap{margin:16px 0;display:flex;justify-content:center;}
+
+    .loading-spinner{
+      width:40px;height:40px;border:4px solid #e5e7eb;
+      border-top-color:var(--red2);border-radius:50%;
+      animation:spin .8s linear infinite;margin:20px auto;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    .blocked-overlay{
+      position:fixed;inset:0;background:#fff;z-index:999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:30px;text-align:center;
+    }
+    .blocked-icon{font-size:4rem;color:var(--red);margin-bottom:16px;}
+    .blocked-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;}
+    .blocked-sub{font-size:.95rem;color:var(--gray);max-width:400px;}
+
+    .flag-peru{display:inline-block;width:24px;height:16px;background:linear-gradient(to right,#cc0000 33%,#fff 33% 66%,#cc0000 66%);border-radius:2px;}
+
+    .already-voted{text-align:center;padding:40px 20px;}
+    .already-voted i{font-size:3rem;color:var(--green);margin-bottom:12px;}
+    .already-voted h3{font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+    .already-voted p{font-size:.88rem;color:var(--gray);}
+
+    .user-bar{background:var(--light);border-bottom:1px solid var(--border);padding:8px 16px;font-size:.82rem;color:var(--gray);display:flex;align-items:center;justify-content:space-between;}
+    .user-bar-info{display:flex;align-items:center;gap:6px;}
+    .logout-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.82rem;}
+    .logout-btn:hover{color:var(--red);}
+
+    footer{background:var(--dark);color:#9ca3af;text-align:center;padding:20px;font-size:.78rem;margin-top:40px;}
+    footer strong{color:#fff;}
+
+    @media(max-width:600px){
+      .form-row{grid-template-columns:1fr;}
+      .candidates-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+      .header-title{font-size:.95rem;}
+      .header-nav a:not(.btn-register-nav){display:none;}
+      .result-bar-wrap{display:none;}
+      .tabs{font-size:.82rem;}
+      .tab{padding:8px 12px;}
+    }
+  </style>
+</head>
+<body>
+
+<div id="blocked-screen" class="blocked-overlay" style="display:none;">
+  <i class="fas fa-globe blocked-icon"></i>
+  <div class="blocked-title">Acceso Restringido</div>
+  <div class="blocked-sub">Este sistema de votacion esta disponible solo para ciudadanos en Peru. Tu ubicacion no corresponde a Peru.</div>
+</div>
+
+<header class="header">
+  <div class="header-left">
+    <i class="fas fa-vote-yea header-logo"></i>
+    <div>
+      <div class="header-title">Voto Online Peru 2026</div>
+      <div class="header-sub">Elecciones Generales &bull; 12 de Abril</div>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <a href="#" onclick="showTab('resultados')" id="nav-results">
+      <i class="fas fa-chart-bar"></i> Resultados
+    </a>
+    <a href="#" onclick="openLogin()" id="nav-login" class="btn-register-nav">
+      <i class="fas fa-sign-in-alt"></i> Ingresar
+    </a>
+    <a href="#" onclick="openRegister()" id="nav-register" class="btn-register-nav">
+      <i class="fas fa-user-plus"></i> Registrarse
+    </a>
+    <a href="#" onclick="logout()" id="nav-logout" style="display:none;">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </a>
+  </nav>
+</header>
+
+<div id="user-bar" class="user-bar" style="display:none;">
+  <div class="user-bar-info">
+    <i class="fas fa-user-circle"></i>
+    <span id="user-email-display"></span>
+  </div>
+  <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</button>
+</div>
+
+<main class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('votar')" id="tab-votar">
+      <i class="fas fa-check-circle"></i> Votar
+    </div>
+    <div class="tab" onclick="showTab('resultados')" id="tab-resultados">
+      <i class="fas fa-chart-bar"></i> Resultados en Vivo
+    </div>
+    <div class="tab" onclick="showTab('info')" id="tab-info">
+      <i class="fas fa-info-circle"></i> Informacion
+    </div>
+  </div>
+
+  <div id="panel-votar" class="tab-panel active">
+    <div id="not-logged-state">
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <div>Para votar debes <strong><a href="#" onclick="openRegister()">registrarte</a></strong> o <strong><a href="#" onclick="openLogin()">iniciar sesion</a></strong>. Solo se permite un voto por persona verificada.</div>
+      </div>
+    </div>
+    <div id="already-voted-state" class="already-voted" style="display:none;">
+      <i class="fas fa-check-circle"></i>
+      <h3>Ya emitiste tu voto</h3>
+      <p>Tu voto ha sido registrado correctamente. Puedes ver los resultados en tiempo real.</p>
+      <br/>
+      <button class="btn btn-primary" onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Ver Resultados</button>
+    </div>
+    <div id="vote-state">
+      <div class="section-title"><i class="fas fa-flag" style="color:var(--red)"></i> Selecciona tu candidato</div>
+      <div class="section-sub">Elecciones Generales Peru 2026 &bull; Candidatos Presidenciales Oficiales (JNE) &bull; Toca una tarjeta para seleccionar</div>
+      <div class="alert alert-warn">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div><strong>Importante:</strong> Una vez confirmado tu voto no podra ser modificado. Este sistema es solo para fines de sondeo, no es el voto oficial de la ONPE.</div>
+      </div>
+      <div class="candidates-grid" id="candidates-grid"></div>
+    </div>
+  </div>
+
+  <div id="panel-resultados" class="tab-panel">
+    <div class="section-title"><i class="fas fa-chart-line" style="color:var(--red)"></i> Resultados en Tiempo Real</div>
+    <div class="section-sub">Se actualiza cada 15 segundos &bull; Datos en vivo de Supabase</div>
+    <div class="stats-row" id="stats-row">
+      <div class="stat-box"><div class="stat-box-num" id="stat-total">-</div><div class="stat-box-label">Total Votos</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="stat-lider">-</div><div class="stat-box-label">Candidato Lider</div></div>
+      <div class="stat-box"><div class="stat-box-num gray" id="stat-nulos">-</div><div class="stat-box-label">Votos Nulos</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="stat-updated">-</div><div class="stat-box-label">Actualizado</div></div>
+    </div>
+    <div class="results-list" id="results-list">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+
+  <div id="panel-info" class="tab-panel">
+    <div class="card">
+      <div class="section-title"><i class="fas fa-shield-alt" style="color:var(--red)"></i> Como funciona este sistema</div>
+      <br/>
+      <p style="font-size:.9rem;line-height:1.7;color:#374151;">
+        Este es un sistema de sondeo independiente para las Elecciones Generales del Peru 2026. 
+        No es el sistema oficial de votacion de la ONPE.
+      </p>
+      <br/>
+      <ul style="font-size:.88rem;line-height:2;color:#374151;padding-left:20px;">
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Solo ciudadanos con IP de Peru pueden acceder</li>
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Verificacion de identidad por correo electronico</li>
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Un solo voto por cuenta verificada</li>
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Proteccion anti-bot con hCaptcha</li>
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Resultados en tiempo real</li>
+        <li><i class="fas fa-check" style="color:var(--green)"></i> Datos almacenados en Supabase con cifrado</li>
+      </ul>
+      <br/>
+      <div class="alert alert-warn">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>Este sondeo no tiene validez legal. El voto oficial se realiza el 12 de abril de 2026 en los locales autorizados por la ONPE.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title"><i class="fas fa-users" style="color:var(--red)"></i> Candidatos Presidenciales 2026</div>
+      <div class="section-sub">36 formulas presidenciales oficiales segun el JNE</div>
+      <div id="info-candidates-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-top:12px;"></div>
+    </div>
+  </div>
+</main>
+
+<div class="vote-confirm-bar" id="confirm-bar">
+  <div class="vote-selected-info">
+    Seleccionaste: <span id="confirm-candidate-name">-</span>
+  </div>
+  <button class="btn btn-primary" onclick="openVoteConfirm()">
+    <i class="fas fa-check"></i> Confirmar Voto
+  </button>
+</div>
+
+<div class="modal-overlay" id="modal-register">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-register')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-user-plus" style="color:var(--red)"></i> Crear Cuenta</div>
+    <div class="modal-sub">Ingresa tu correo y recibiras un codigo de verificacion</div>
+    <div id="reg-step1">
+      <div class="form-group">
+        <label>Correo electronico</label>
+        <input type="email" id="reg-email" placeholder="tucorreo@ejemplo.com"/>
+      </div>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="reg-name" placeholder="Juan Perez"/>
+      </div>
+      <div class="form-group">
+        <label>Contrasena</label>
+        <input type="password" id="reg-pass" placeholder="Minimo 8 caracteres"/>
+      </div>
+      <div class="captcha-wrap" id="captcha-reg">
+        <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001" data-theme="light"></div>
+      </div>
+      <div id="reg-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
+      <button class="btn btn-primary btn-full" onclick="doRegister()" id="reg-btn">
+        <i class="fas fa-paper-plane"></i> Enviar Codigo
+      </button>
+    </div>
+    <div id="reg-step2" style="display:none;">
+      <div class="alert alert-info"><i class="fas fa-envelope"></i> Codigo enviado a tu correo. Revisa tu bandeja de entrada y spam.</div>
+      <div class="otp-inputs" id="otp-inputs-reg">
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,0,'reg')"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,1,'reg')"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,2,'reg')"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,3,'reg')"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,4,'reg')"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric" oninput="otpMove(this,5,'reg')"/>
+      </div>
+      <div id="reg-otp-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
+      <button class="btn btn-primary btn-full" onclick="verifyOTP('reg')" id="reg-otp-btn">
+        <i class="fas fa-check-circle"></i> Verificar Codigo
+      </button>
+      <div style="margin-top:10px;text-align:center;">
+        <a href="#" onclick="document.getElementById('reg-step1').style.display='block';document.getElementById('reg-step2').style.display='none';" style="font-size:.82rem;">Cambiar correo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-login')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-sign-in-alt" style="color:var(--red)"></i> Iniciar Sesion</div>
+    <div class="modal-sub">Ingresa tu correo y contrasena para votar</div>
+    <div class="form-group">
+      <label>Correo electronico</label>
+      <input type="email" id="login-email" placeholder="tucorreo@ejemplo.com"/>
+    </div>
+    <div class="form-group">
+      <label>Contrasena</label>
+      <input type="password" id="login-pass" placeholder="Tu contrasena" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="captcha-wrap" id="captcha-login">
+      <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001" data-theme="light"></div>
+    </div>
+    <div id="login-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
+    <button class="btn btn-primary btn-full" onclick="doLogin()" id="login-btn">
+      <i class="fas fa-sign-in-alt"></i> Ingresar
+    </button>
+    <div style="margin-top:12px;text-align:center;font-size:.82rem;">
+      No tienes cuenta? <a href="#" onclick="closeModal('modal-login');openRegister()">Registrate</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vote-confirm">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-vote-confirm')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-exclamation-triangle" style="color:#d97706"></i> Confirmar Voto</div>
+    <div class="modal-sub">Esta accion no puede deshacerse. Tu voto es permanente.</div>
+    <div id="vote-confirm-detail" style="background:var(--light);border-radius:10px;padding:16px;margin-bottom:16px;text-align:center;"></div>
+    <div class="captcha-wrap" id="captcha-vote">
+      <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001" data-theme="light"></div>
+    </div>
+    <div id="vote-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-vote-confirm')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="confirmVote()" id="vote-btn">
+        <i class="fas fa-check"></i> Si, Confirmar Voto
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="flag-peru"></div>
+  <br/><br/>
+  <strong>Voto Online Peru 2026</strong> &bull; Sondeo Independiente No Oficial<br/>
+  Los datos son almacenados de forma anonima. Este sistema no reemplaza el voto oficial de la ONPE.<br/>
+  Elecciones Generales &bull; 12 de Abril de 2026
+</footer>
+
+<script>
+const SUPABASE_URL = window.SUPABASE_URL || 'https://lmrkjbyjzoztmyyeccdt.supabase.co';
+const SUPABASE_ANON = window.SUPABASE_ANON || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtcmtqYnlqem96dG15eWVjY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTkyMzYsImV4cCI6MjA4OTk3NTIzNn0.k9pJ5yp4zvDdLH8VyqkAb86sp4Jb6aKYtYZLKwsAnKo';
+const HCAPTCHA_SITEKEY = window.HCAPTCHA_SITEKEY || '10000000-ffff-ffff-ffff-000000000001';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const CANDIDATES = [
+  {id:'fuerza_popular',      party:'Fuerza Popular',             name:'Keiko Fujimori',         color:'#cc0000', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fuerza_Popular_logo.svg/200px-Fuerza_Popular_logo.svg.png'},
+  {id:'alianza_progreso',    party:'Alianza Para el Progreso',   name:'Cesar Acuna',            color:'#f97316', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/APP_logo.png/200px-APP_logo.png'},
+  {id:'renovacion_popular',  party:'Renovacion Popular',         name:'Rafael Lopez Aliaga',    color:'#2563eb', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Renovaci%C3%B3n_Popular_logo.png/200px-Renovaci%C3%B3n_Popular_logo.png'},
+  {id:'avanza_pais',         party:'Avanza Pais',                name:'Jose Williams Zapata',   color:'#7c3aed', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Avanza_Pa%C3%ADs_logo.png/200px-Avanza_Pa%C3%ADs_logo.png'},
+  {id:'somos_peru',          party:'Somos Peru',                 name:'George Forsyth',         color:'#16a34a', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Somos_Per%C3%BA_logo.svg/200px-Somos_Per%C3%BA_logo.svg.png'},
+  {id:'peru_libre',          party:'Peru Libre',                 name:'Vladimir Cerron',        color:'#dc2626', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Peru_libre_logo.png/200px-Peru_libre_logo.png'},
+  {id:'podemos_peru',        party:'Podemos Peru',               name:'Jose Luna Galvez',       color:'#0891b2', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Podemos_Per%C3%BA_logo.png/200px-Podemos_Per%C3%BA_logo.png'},
+  {id:'juntos_peru',         party:'Juntos por el Peru',         name:'Roberto Sanchez',        color:'#dc7c02', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Juntos_por_el_Per%C3%BA_logo.svg/200px-Juntos_por_el_Per%C3%BA_logo.svg.png'},
+  {id:'partido_morado',      party:'Partido Morado',             name:'Mesias Guevara',         color:'#7c3aed', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Partido_Morado_logo.svg/200px-Partido_Morado_logo.svg.png'},
+  {id:'apra',                party:'Partido Aprista Peruano',    name:'Enrique Valderrama',     color:'#dc2626', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/APRA_logo.svg/200px-APRA_logo.svg.png'},
+  {id:'ahora_nacion',        party:'Ahora Nacion',               name:'Alfonso Lopez-Chau',     color:'#059669', logo:''},
+  {id:'buen_gobierno',       party:'Partido del Buen Gobierno',  name:'Jorge Nieto',            color:'#0284c7', logo:''},
+  {id:'un_camino',           party:'Un Camino Diferente',        name:'Rosario Fernandez',      color:'#9333ea', logo:''},
+  {id:'patriotico',          party:'Partido Patriotico del Peru',name:'Herbert Caller',         color:'#1d4ed8', logo:''},
+  {id:'frente_esperanza',    party:'Frente de la Esperanza',     name:'Fernando Olivera',       color:'#ca8a04', logo:''},
+  {id:'primero_gente',       party:'Primero la Gente',           name:'Marisol Perez Tello',    color:'#16a34a', logo:''},
+  {id:'progresemos',         party:'Progresemos',                name:'Paul Jaimes',            color:'#0369a1', logo:''},
+  {id:'fe_peru',             party:'Fe en el Peru',              name:'Alvaro Paz de la Barra', color:'#b45309', logo:''},
+  {id:'pais_todos',          party:'Pais Para Todos',            name:'Carlos Alvarez',         color:'#0f766e', logo:''},
+  {id:'peru_accion',         party:'Peru Accion',                name:'Francisco Diez-Canseco', color:'#7c2d12', logo:''},
+  {id:'integridad',          party:'Integridad Democratica',     name:'Wolfgang Grozo',         color:'#1e40af', logo:''},
+  {id:'obras',               party:'Partido Civico Obras',       name:'Ricardo Belmont',        color:'#dc2626', logo:''},
+  {id:'pte',                 party:'PTE Peru',                   name:'Napoleon Becerra',       color:'#15803d', logo:''},
+  {id:'venceremos',          party:'Alianza Venceremos',         name:'Ronald Atencio',         color:'#7c3aed', logo:''},
+  {id:'cooperacion',         party:'Cooperacion Popular',        name:'Yonhy Lescano',          color:'#0369a1', logo:''},
+  {id:'peru_primero',        party:'Peru Primero',               name:'Mario Vizcarra',         color:'#be185d', logo:''},
+  {id:'democratico_federal', party:'Partido Democratico Federal',name:'Joaquin Masse',          color:'#1d4ed8', logo:''},
+  {id:'democrata_verde',     party:'Partido Democrata Verde',    name:'Alex Gonzales',          color:'#16a34a', logo:''},
+  {id:'unidad_nacional',     party:'Unidad Nacional',            name:'Roberto Chiabra',        color:'#0f172a', logo:''},
+  {id:'libertad_popular',    party:'Libertad Popular',           name:'Rafael Belaunde',        color:'#b45309', logo:''},
+  {id:'si_creo',             party:'Partido SiCreo',             name:'Carlos Espa',            color:'#7e22ce', logo:''},
+  {id:'salvemos_peru',       party:'Salvemos al Peru',           name:'Antonio Ortiz',          color:'#0369a1', logo:''},
+  {id:'fuerza_libertad',     party:'Fuerza y Libertad',          name:'Fiorella Molinelli',     color:'#b91c1c', logo:''},
+  {id:'peru_moderno',        party:'Peru Moderno',               name:'Carlos Jaico',           color:'#0284c7', logo:''},
+  {id:'prin',                party:'Partido PRIN',               name:'Walter Chirinos',        color:'#7c3aed', logo:''},
+  {id:'democrata_unido',     party:'Democrata Unido Peru',       name:'Charlie Carrasco',       color:'#0f766e', logo:''},
+  {id:'voto_nulo',           party:'Voto Nulo / En Blanco',      name:'Ninguno',                color:'#6b7280', logo:'', nulo:true},
+];
+
+let currentUser = null;
+let selectedCandidate = null;
+let hasVoted = false;
+let resultsInterval = null;
+
+function getInitials(name){ return name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(); }
+
+function buildCandidatesGrid(){
+  const grid = document.getElementById('candidates-grid');
+  const infoList = document.getElementById('info-candidates-list');
+  grid.innerHTML = '';
+  if(infoList) infoList.innerHTML = '';
+  CANDIDATES.forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'candidate-card' + (c.nulo ? ' nulo' : '');
+    card.dataset.id = c.id;
+    card.onclick = () => selectCandidate(c.id);
+    let logoHtml = '';
+    if(c.logo){
+      logoHtml = `<img class="party-logo" src="${c.logo}" alt="${c.party}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+                  <div class="party-logo-placeholder" style="background:${c.color};display:none;">${getInitials(c.party)}</div>`;
+    } else {
+      logoHtml = `<div class="party-logo-placeholder" style="background:${c.color};">${getInitials(c.party)}</div>`;
+    }
+    card.innerHTML = `
+      <div class="candidate-check"><i class="fas fa-check"></i></div>
+      ${logoHtml}
+      <div class="candidate-party">${c.party}</div>
+      <div class="candidate-name">${c.nulo ? '<i class="fas fa-ban"></i> Voto Nulo' : c.name}</div>
+    `;
+    grid.appendChild(card);
+    if(infoList && !c.nulo){
+      const item = document.createElement('div');
+      item.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--border);border-radius:8px;background:#fff;';
+      item.innerHTML = `<div style="width:32px;height:32px;border-radius:4px;background:${c.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0;">${getInitials(c.party)}</div>
+        <div><div style="font-size:.72rem;font-weight:700;color:${c.color}">${c.party}</div><div style="font-size:.8rem;">${c.name}</div></div>`;
+      infoList.appendChild(item);
+    }
+  });
+}
+
+function selectCandidate(id){
+  if(!currentUser){ openLogin(); return; }
+  if(hasVoted) return;
+  selectedCandidate = id;
+  document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
+  const cand = CANDIDATES.find(c=>c.id===id);
+  const bar = document.getElementById('confirm-bar');
+  const nameEl = document.getElementById('confirm-candidate-name');
+  if(cand){ nameEl.textContent = cand.nulo ? 'Voto Nulo / En Blanco' : cand.name + ' (' + cand.party + ')'; }
+  bar.classList.add('show');
+}
+
+function openVoteConfirm(){
+  if(!selectedCandidate) return;
+  const cand = CANDIDATES.find(c=>c.id===selectedCandidate);
+  let logoHtml = cand.logo
+    ? `<img src="${cand.logo}" style="width:70px;height:70px;object-fit:contain;border-radius:6px;margin-bottom:8px;" onerror="this.style.display='none'">`
+    : `<div style="width:70px;height:70px;border-radius:6px;background:${cand.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:700;margin:0 auto 8px;">${getInitials(cand.party)}</div>`;
+  document.getElementById('vote-confirm-detail').innerHTML = `
+    ${logoHtml}
+    <div style="font-size:.72rem;font-weight:700;color:${cand.color};text-transform:uppercase;">${cand.party}</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px;">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
+  `;
+  hideError('vote-error');
+  openModal('modal-vote-confirm');
+}
+
+async function confirmVote(){
+  const token = hcaptcha.getResponse(document.querySelector('#captcha-vote .h-captcha'));
+  if(!token){ showError('vote-error','Por favor completa el captcha'); return; }
+  const btn = document.getElementById('vote-btn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+  try {
+    const res = await fetch('/api/vote', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ candidate_id: selectedCandidate, captcha_token: token })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error||'Error al registrar voto');
+    closeModal('modal-vote-confirm');
+    hasVoted = true;
+    showAlreadyVoted();
+    loadResults();
+  } catch(e){
+    showError('vote-error', e.message);
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Si, Confirmar Voto';
+    hcaptcha.reset();
+  }
+}
+
+function showAlreadyVoted(){
+  document.getElementById('vote-state').style.display = 'none';
+  document.getElementById('already-voted-state').style.display = 'block';
+  document.getElementById('confirm-bar').classList.remove('show');
+}
+
+async function checkVoted(){
+  if(!currentUser) return;
+  try {
+    const res = await fetch('/api/check-voted');
+    const data = await res.json();
+    if(data.voted){
+      hasVoted = true;
+      showAlreadyVoted();
+    } else {
+      document.getElementById('vote-state').style.display = 'block';
+    }
+  } catch(e){ document.getElementById('vote-state').style.display = 'block'; }
+}
+
+async function loadResults(){
+  const list = document.getElementById('results-list');
+  try {
+    const res = await fetch('/api/results');
+    const data = await res.json();
+    if(!data.results) return;
+    const total = data.total || 0;
+    const nulos = data.results.find(r=>r.candidate_id==='voto_nulo');
+    const nulo_count = nulos ? nulos.count : 0;
+    document.getElementById('stat-total').textContent = total.toLocaleString();
+    document.getElementById('stat-nulos').textContent = nulo_count.toLocaleString();
+    document.getElementById('stat-updated').textContent = new Date().toLocaleTimeString('es-PE');
+    const topCand = data.results.filter(r=>r.candidate_id!=='voto_nulo')[0];
+    if(topCand){
+      const c = CANDIDATES.find(x=>x.id===topCand.candidate_id);
+      document.getElementById('stat-lider').textContent = c ? c.name.split(' ')[0] : '-';
+    }
+    const sorted = [...data.results].sort((a,b)=>b.count-a.count);
+    list.innerHTML = '';
+    sorted.forEach((r,i)=>{
+      const cand = CANDIDATES.find(c=>c.id===r.candidate_id);
+      if(!cand) return;
+      const pct = total > 0 ? ((r.count/total)*100).toFixed(1) : '0.0';
+      let logoHtml = cand.logo
+        ? `<img class="result-logo" src="${cand.logo}" alt="${cand.party}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : '';
+      const phStyle = `background:${cand.color}`;
+      const item = document.createElement('div');
+      item.className = 'result-item' + (cand.nulo?' nulo':'');
+      item.innerHTML = `
+        <div class="result-rank">${i+1}</div>
+        ${logoHtml}
+        <div class="result-logo-ph" style="${phStyle};${cand.logo?'display:none;':''}">${getInitials(cand.party)}</div>
+        <div class="result-info">
+          <div class="result-party">${cand.party}</div>
+          <div class="result-name">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
+          <div class="result-votes">${r.count.toLocaleString()} votos</div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar"><div class="result-bar-fill${cand.nulo?' gray':''}" style="width:${pct}%"></div></div>
+        </div>
+        <div class="result-pct">${pct}%</div>
+      `;
+      list.appendChild(item);
+    });
+    if(sorted.length === 0){ list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)"><i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px"></i>Aun no hay votos registrados</div>'; }
+  } catch(e){ list.innerHTML = '<div style="text-align:center;color:var(--gray);padding:20px">Error cargando resultados</div>'; }
+}
+
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name)?.classList.add('active');
+  document.getElementById('panel-'+name)?.classList.add('active');
+  if(name==='resultados'){ loadResults(); clearInterval(resultsInterval); resultsInterval = setInterval(loadResults,15000); }
+  else { clearInterval(resultsInterval); }
+}
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); if(window.hcaptcha) hcaptcha.reset(); }
+function openRegister(){ closeModal('modal-login'); openModal('modal-register'); document.getElementById('reg-step1').style.display='block'; document.getElementById('reg-step2').style.display='none'; }
+function openLogin(){ closeModal('modal-register'); openModal('modal-login'); }
+
+function showError(id, msg){ const el=document.getElementById(id); el.style.display='flex'; el.querySelector('span').textContent=msg; }
+function hideError(id){ document.getElementById(id).style.display='none'; }
+
+function otpMove(input, index, prefix){
+  if(input.value.length===1 && index<5){
+    const inputs = document.querySelectorAll(`#otp-inputs-${prefix} .otp-input`);
+    inputs[index+1]?.focus();
+  }
+  if(input.value.length===1 && index===5){ document.getElementById(prefix+'-otp-btn')?.focus(); }
+}
+
+function getOTP(prefix){
+  return Array.from(document.querySelectorAll(`#otp-inputs-${prefix} .otp-input`)).map(i=>i.value).join('');
+}
+
+async function doRegister(){
+  const email = document.getElementById('reg-email').value.trim();
+  const name = document.getElementById('reg-name').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const captcha = hcaptcha.getResponse(document.querySelector('#captcha-reg .h-captcha'));
+  hideError('reg-error');
+  if(!email||!name||!pass){ showError('reg-error','Todos los campos son obligatorios'); return; }
+  if(pass.length<8){ showError('reg-error','La contrasena debe tener al menos 8 caracteres'); return; }
+  if(!captcha){ showError('reg-error','Por favor completa el captcha'); return; }
+  const btn = document.getElementById('reg-btn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Enviando...';
+  try {
+    const res = await fetch('/api/register', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, name, password: pass, captcha_token: captcha})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error||'Error al registrar');
+    document.getElementById('reg-step1').style.display='none';
+    document.getElementById('reg-step2').style.display='block';
+  } catch(e){
+    showError('reg-error', e.message);
+    hcaptcha.reset();
+  }
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Enviar Codigo';
+}
+
+async function verifyOTP(prefix){
+  const code = getOTP(prefix);
+  const email = document.getElementById('reg-email').value.trim();
+  if(code.length!==6){ showError(prefix+'-otp-error','Ingresa el codigo completo de 6 digitos'); return; }
+  const btn = document.getElementById(prefix+'-otp-btn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Verificando...';
+  try {
+    const res = await fetch('/api/verify-otp', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, code})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error||'Codigo incorrecto');
+    closeModal('modal-register');
+    setCurrentUser(data.user);
+  } catch(e){
+    showError(prefix+'-otp-error', e.message);
+  }
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-check-circle"></i> Verificar Codigo';
+}
+
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const captcha = hcaptcha.getResponse(document.querySelector('#captcha-login .h-captcha'));
+  hideError('login-error');
+  if(!email||!pass){ showError('login-error','Ingresa tu correo y contrasena'); return; }
+  if(!captcha){ showError('login-error','Por favor completa el captcha'); return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Ingresando...';
+  try {
+    const res = await fetch('/api/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, password: pass, captcha_token: captcha})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error||'Error al ingresar');
+    closeModal('modal-login');
+    setCurrentUser(data.user);
+  } catch(e){
+    showError('login-error', e.message);
+    hcaptcha.reset();
+  }
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Ingresar';
+}
+
+function setCurrentUser(user){
+  currentUser = user;
+  localStorage.setItem('voto_session', JSON.stringify(user));
+  document.getElementById('nav-login').style.display = 'none';
+  document.getElementById('nav-register').style.display = 'none';
+  document.getElementById('nav-logout').style.display = '';
+  document.getElementById('user-bar').style.display = '';
+  document.getElementById('user-email-display').textContent = user.email;
+  document.getElementById('not-logged-state').style.display = 'none';
+  checkVoted();
+}
+
+async function logout(){
+  await fetch('/api/logout', {method:'POST'});
+  currentUser = null;
+  localStorage.removeItem('voto_session');
+  hasVoted = false;
+  selectedCandidate = null;
+  document.getElementById('nav-login').style.display = '';
+  document.getElementById('nav-register').style.display = '';
+  document.getElementById('nav-logout').style.display = 'none';
+  document.getElementById('user-bar').style.display = 'none';
+  document.getElementById('not-logged-state').style.display = 'block';
+  document.getElementById('vote-state').style.display = 'none';
+  document.getElementById('already-voted-state').style.display = 'none';
+  document.getElementById('confirm-bar').classList.remove('show');
+  document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected'));
+}
+
+async function checkGeoIP(){
+  try {
+    const res = await fetch('/api/check-geo');
+    const data = await res.json();
+    if(!data.allowed){ document.getElementById('blocked-screen').style.display='flex'; }
+  } catch(e){ }
+}
+
+async function restoreSession(){
+  try {
+    const res = await fetch('/api/session');
+    const data = await res.json();
+    if(data.user){ setCurrentUser(data.user); }
+  } catch(e){ }
+}
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  buildCandidatesGrid();
+  await checkGeoIP();
+  await restoreSession();
+  loadResults();
+  setInterval(loadResults, 15000);
+});
+
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) closeModal(m.id); });
+});
+</script>
+</body>
+</html>
