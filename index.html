@@ -6,174 +6,156 @@
   <title>Voto Online Peru 2026</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    :root{
-      --red:#cc0000;--red2:#e60000;--white:#fff;--light:#f5f5f5;
-      --gray:#6b7280;--dark:#111827;--border:#d1d5db;
-      --green:#16a34a;--blue:#2563eb;--shadow:0 2px 8px rgba(0,0,0,.12);
+    :root {
+      --red: #cc0000; --red2: #e60000; --white: #fff; --light: #f5f5f5;
+      --gray: #6b7280; --dark: #111827; --border: #d1d5db;
+      --green: #16a34a; --blue: #2563eb; --shadow: 0 2px 8px rgba(0,0,0,.12);
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--light);color:var(--dark);}
-    a{color:var(--blue);text-decoration:none;}
-    a:hover{text-decoration:underline;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--dark); }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    .header{
-      background:linear-gradient(135deg,#cc0000,#8b0000);
-      color:#fff;padding:14px 20px;
-      display:flex;align-items:center;justify-content:space-between;
-      box-shadow:0 2px 8px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;
+    .header {
+      background: linear-gradient(135deg, #cc0000, #8b0000);
+      color: #fff; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25); position: sticky; top: 0; z-index: 100;
     }
-    .header-left{display:flex;align-items:center;gap:12px;}
-    .header-logo{font-size:1.5rem;color:#fff;}
-    .header-title{font-size:1.1rem;font-weight:700;line-height:1.2;}
-    .header-sub{font-size:.72rem;opacity:.85;}
-    .header-nav{display:flex;gap:12px;align-items:center;}
-    .header-nav a{color:#fff;font-size:.82rem;font-weight:600;padding:6px 12px;border-radius:6px;transition:background .2s;}
-    .header-nav a:hover{background:rgba(255,255,255,.18);text-decoration:none;}
-    .btn-votar-nav{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);}
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo { font-size: 1.5rem; color: #fff; }
+    .header-title { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+    .header-sub { font-size: .72rem; opacity: .85; }
+    .header-nav { display: flex; gap: 12px; align-items: center; }
+    .header-nav a { color: #fff; font-size: .82rem; font-weight: 600; padding: 6px 12px; border-radius: 6px; transition: background .2s; cursor: pointer; }
+    .header-nav a:hover { background: rgba(255,255,255,.18); text-decoration: none; }
+    .btn-votar-nav { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); }
 
-    .container{max-width:1100px;margin:0 auto;padding:20px 16px;}
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
-    .tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px;overflow-x:auto;}
-    .tab{padding:10px 20px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--gray);
-         border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
-    .tab.active{color:var(--red2);border-bottom-color:var(--red2);}
-    .tab:hover:not(.active){color:var(--dark);}
-    .tab-panel{display:none;}
-    .tab-panel.active{display:block;}
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+    .tab { padding: 10px 20px; cursor: pointer; font-size: .9rem; font-weight: 600; color: var(--gray); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all .2s; }
+    .tab.active { color: var(--red2); border-bottom-color: var(--red2); }
+    .tab:hover:not(.active) { color: var(--dark); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-    .section-title{font-size:1.2rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
-    .section-sub{font-size:.83rem;color:var(--gray);margin-bottom:20px;}
+    .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .section-sub { font-size: .83rem; color: var(--gray); margin-bottom: 20px; }
 
-    .alert{padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:.88rem;display:flex;align-items:flex-start;gap:10px;}
-    .alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;}
-    .alert-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
-    .alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;}
-    .alert-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;}
-    .alert i{margin-top:1px;flex-shrink:0;}
+    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: .88rem; display: flex; align-items: flex-start; gap: 10px; }
+    .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .alert-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .alert i { margin-top: 1px; flex-shrink: 0; }
 
-    .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
 
-    .form-group{margin-bottom:16px;}
-    .form-group label{display:block;font-size:.85rem;font-weight:600;color:var(--dark);margin-bottom:6px;}
-    .form-group input{
-      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
-      font-size:.9rem;transition:border .2s;background:#fff;
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; transition: border .2s; background: #fff; }
+    .form-group input:focus { outline: none; border-color: var(--red2); box-shadow: 0 0 0 3px rgba(204,0,0,.08); }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: 8px; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+    .btn-primary { background: var(--red2); color: #fff; }
+    .btn-primary:hover { background: var(--red); transform: translateY(-1px); }
+    .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #e5e7eb; }
+    .btn-full { width: 100%; justify-content: center; }
+
+    .candidates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .candidate-card {
+      background: #fff; border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px;
+      text-align: center; cursor: pointer; transition: all .2s; position: relative;
     }
-    .form-group input:focus{outline:none;border-color:var(--red2);box-shadow:0 0 0 3px rgba(204,0,0,.08);}
-
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:8px;
-         font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;}
-    .btn-primary{background:var(--red2);color:#fff;}
-    .btn-primary:hover{background:var(--red);transform:translateY(-1px);}
-    .btn-primary:disabled{background:#9ca3af;cursor:not-allowed;transform:none;}
-    .btn-secondary{background:var(--light);color:var(--dark);border:1px solid var(--border);}
-    .btn-secondary:hover{background:#e5e7eb;}
-    .btn-full{width:100%;justify-content:center;}
-
-    .candidates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
-    .candidate-card{
-      background:#fff;border:2px solid var(--border);border-radius:12px;padding:16px 12px;
-      text-align:center;cursor:pointer;transition:all .2s;position:relative;
+    .candidate-card:hover { border-color: var(--red2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(204,0,0,.12); }
+    .candidate-card.selected { border-color: var(--red2); background: #fff5f5; box-shadow: 0 0 0 3px rgba(204,0,0,.15); }
+    .candidate-card.nulo { border-color: #6b7280; }
+    .candidate-card.nulo:hover { border-color: #374151; background: #f3f4f6; }
+    .candidate-card.nulo.selected { border-color: #374151; background: #f3f4f6; box-shadow: 0 0 0 3px rgba(107,114,128,.2); }
+    .candidate-check {
+      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
+      background: var(--red2); color: #fff; border-radius: 50%;
+      display: none; align-items: center; justify-content: center; font-size: .65rem;
     }
-    .candidate-card:hover{border-color:var(--red2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(204,0,0,.12);}
-    .candidate-card.selected{border-color:var(--red2);background:#fff5f5;box-shadow:0 0 0 3px rgba(204,0,0,.15);}
-    .candidate-card.nulo{border-color:#6b7280;}
-    .candidate-card.nulo:hover{border-color:#374151;background:#f3f4f6;}
-    .candidate-card.nulo.selected{border-color:#374151;background:#f3f4f6;box-shadow:0 0 0 3px rgba(107,114,128,.2);}
-    .candidate-check{
-      position:absolute;top:8px;right:8px;width:22px;height:22px;
-      background:var(--red2);color:#fff;border-radius:50%;
-      display:none;align-items:center;justify-content:center;font-size:.65rem;
+    .candidate-card.selected .candidate-check { display: flex; }
+    .candidate-card.nulo.selected .candidate-check { background: #374151; }
+    .cand-icon {
+      width: 80px; height: 80px; margin: 0 auto 10px; display: flex;
+      align-items: center; justify-content: center; border-radius: 10px;
+      font-size: 1.6rem; color: #fff;
     }
-    .candidate-card.selected .candidate-check{display:flex;}
-    .candidate-card.nulo.selected .candidate-check{background:#374151;}
-    .party-logo{width:80px;height:80px;object-fit:contain;margin:0 auto 10px;display:block;border-radius:6px;}
-    .party-logo-placeholder{
-      width:80px;height:80px;margin:0 auto 10px;display:flex;
-      align-items:center;justify-content:center;border-radius:6px;
-      font-size:1.8rem;color:#fff;font-weight:900;
+    .candidate-party { font-size: .65rem; font-weight: 700; color: var(--red2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .candidate-name { font-size: .82rem; font-weight: 600; color: var(--dark); line-height: 1.3; }
+    .candidate-card.nulo .candidate-party { color: #4b5563; }
+
+    .vote-confirm-bar {
+      position: sticky; bottom: 0; background: #fff; border-top: 2px solid var(--border);
+      padding: 12px 20px; display: none; align-items: center; justify-content: space-between;
+      box-shadow: 0 -4px 12px rgba(0,0,0,.08); gap: 12px; flex-wrap: wrap; z-index: 50;
     }
-    .candidate-party{font-size:.65rem;font-weight:700;color:var(--red2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
-    .candidate-name{font-size:.82rem;font-weight:600;color:var(--dark);line-height:1.3;}
-    .candidate-card.nulo .candidate-party{color:#4b5563;}
+    .vote-confirm-bar.show { display: flex; }
+    .vote-selected-info { font-size: .9rem; font-weight: 600; }
+    .vote-selected-info span { color: var(--red2); }
 
-    .vote-confirm-bar{
-      position:sticky;bottom:0;background:#fff;border-top:2px solid var(--border);
-      padding:12px 20px;display:none;align-items:center;justify-content:space-between;
-      box-shadow:0 -4px 12px rgba(0,0,0,.08);gap:12px;flex-wrap:wrap;z-index:50;
-    }
-    .vote-confirm-bar.show{display:flex;}
-    .vote-selected-info{font-size:.9rem;font-weight:600;}
-    .vote-selected-info span{color:var(--red2);}
+    .results-list { display: flex; flex-direction: column; gap: 10px; }
+    .result-item { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+    .result-rank { font-size: .85rem; font-weight: 700; color: var(--gray); width: 24px; text-align: center; }
+    .result-icon { width: 44px; height: 44px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
+    .result-info { flex: 1; min-width: 0; }
+    .result-party { font-size: .75rem; color: var(--red2); font-weight: 700; text-transform: uppercase; }
+    .result-name { font-size: .88rem; font-weight: 600; color: var(--dark); }
+    .result-bar-wrap { flex: 2; min-width: 80px; }
+    .result-bar { height: 10px; border-radius: 5px; background: #e5e7eb; overflow: hidden; }
+    .result-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #cc0000, #e60000); transition: width 1s ease; }
+    .result-bar-fill.gray { background: #6b7280; }
+    .result-pct { font-size: .82rem; font-weight: 700; color: var(--dark); min-width: 44px; text-align: right; }
+    .result-votes { font-size: .72rem; color: var(--gray); }
+    .result-item.nulo .result-party { color: #4b5563; }
 
-    .results-list{display:flex;flex-direction:column;gap:10px;}
-    .result-item{
-      display:flex;align-items:center;gap:12px;
-      background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;
-    }
-    .result-rank{font-size:.85rem;font-weight:700;color:var(--gray);width:24px;text-align:center;}
-    .result-logo{width:44px;height:44px;object-fit:contain;border-radius:4px;flex-shrink:0;}
-    .result-logo-ph{width:44px;height:44px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.9rem;}
-    .result-info{flex:1;min-width:0;}
-    .result-party{font-size:.75rem;color:var(--red2);font-weight:700;text-transform:uppercase;}
-    .result-name{font-size:.88rem;font-weight:600;color:var(--dark);}
-    .result-bar-wrap{flex:2;min-width:80px;}
-    .result-bar{height:10px;border-radius:5px;background:#e5e7eb;overflow:hidden;}
-    .result-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#cc0000,#e60000);transition:width 1s ease;}
-    .result-bar-fill.gray{background:#6b7280;}
-    .result-pct{font-size:.82rem;font-weight:700;color:var(--dark);min-width:44px;text-align:right;}
-    .result-votes{font-size:.72rem;color:var(--gray);}
-    .result-item.nulo .result-party{color:#4b5563;}
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-box { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
+    .stat-box-num { font-size: 1.6rem; font-weight: 800; color: var(--red2); }
+    .stat-box-num.gray { color: var(--gray); }
+    .stat-box-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
 
-    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
-    .stat-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
-    .stat-box-num{font-size:1.6rem;font-weight:800;color:var(--red2);}
-    .stat-box-num.gray{color:var(--gray);}
-    .stat-box-label{font-size:.72rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; padding: 28px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+    .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .modal-sub { font-size: .85rem; color: var(--gray); margin-bottom: 20px; }
+    .modal-close { float: right; background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--gray); margin-top: -4px; }
 
-    .modal-overlay{
-      position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
-      display:none;align-items:center;justify-content:center;padding:16px;
-    }
-    .modal-overlay.open{display:flex;}
-    .modal{background:#fff;border-radius:16px;padding:28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);}
-    .modal-title{font-size:1.2rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-    .modal-sub{font-size:.85rem;color:var(--gray);margin-bottom:20px;}
-    .modal-close{float:right;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--gray);margin-top:-4px;}
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: var(--red2); border-radius: 50%; animation: spin .8s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .loading-spinner{
-      width:40px;height:40px;border:4px solid #e5e7eb;
-      border-top-color:var(--red2);border-radius:50%;
-      animation:spin .8s linear infinite;margin:20px auto;
-    }
-    @keyframes spin{to{transform:rotate(360deg);}}
+    .already-voted { text-align: center; padding: 40px 20px; }
+    .already-voted i { font-size: 3rem; color: var(--green); margin-bottom: 12px; display: block; }
+    .already-voted h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .already-voted p { font-size: .88rem; color: var(--gray); }
 
-    .already-voted{text-align:center;padding:40px 20px;}
-    .already-voted i{font-size:3rem;color:var(--green);margin-bottom:12px;}
-    .already-voted h3{font-size:1.2rem;font-weight:700;margin-bottom:6px;}
-    .already-voted p{font-size:.88rem;color:var(--gray);}
+    .user-bar { background: var(--light); border-bottom: 1px solid var(--border); padding: 8px 16px; font-size: .82rem; color: var(--gray); display: flex; align-items: center; justify-content: space-between; }
+    .user-bar-info { display: flex; align-items: center; gap: 6px; }
+    .logout-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: .82rem; }
+    .logout-btn:hover { color: var(--red); }
 
-    .user-bar{background:var(--light);border-bottom:1px solid var(--border);padding:8px 16px;font-size:.82rem;color:var(--gray);display:flex;align-items:center;justify-content:space-between;}
-    .user-bar-info{display:flex;align-items:center;gap:6px;}
-    .logout-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.82rem;}
-    .logout-btn:hover{color:var(--red);}
+    .name-entry { text-align: center; padding: 30px 20px; max-width: 400px; margin: 0 auto; }
+    .name-entry > i { font-size: 3rem; color: var(--red2); margin-bottom: 16px; display: block; }
+    .name-entry h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+    .name-entry p { font-size: .88rem; color: var(--gray); margin-bottom: 24px; }
 
-    .name-entry{text-align:center;padding:30px 20px;max-width:400px;margin:0 auto;}
-    .name-entry i{font-size:3rem;color:var(--red2);margin-bottom:16px;}
-    .name-entry h3{font-size:1.3rem;font-weight:700;margin-bottom:8px;}
-    .name-entry p{font-size:.88rem;color:var(--gray);margin-bottom:24px;}
+    footer { background: var(--dark); color: #9ca3af; text-align: center; padding: 20px; font-size: .78rem; margin-top: 40px; }
+    footer strong { color: #fff; }
+    .flag-peru { display: inline-block; width: 24px; height: 16px; background: linear-gradient(to right, #cc0000 33%, #fff 33% 66%, #cc0000 66%); border-radius: 2px; vertical-align: middle; }
 
-    footer{background:var(--dark);color:#9ca3af;text-align:center;padding:20px;font-size:.78rem;margin-top:40px;}
-    footer strong{color:#fff;}
-
-    .flag-peru{display:inline-block;width:24px;height:16px;background:linear-gradient(to right,#cc0000 33%,#fff 33% 66%,#cc0000 66%);border-radius:2px;}
-
-    @media(max-width:600px){
-      .candidates-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
-      .header-title{font-size:.95rem;}
-      .result-bar-wrap{display:none;}
-      .tabs{font-size:.82rem;}
-      .tab{padding:8px 12px;}
+    @media(max-width: 600px) {
+      .candidates-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .header-title { font-size: .95rem; }
+      .result-bar-wrap { display: none; }
+      .tabs { font-size: .82rem; }
+      .tab { padding: 8px 12px; }
     }
   </style>
 </head>
@@ -188,37 +170,22 @@
     </div>
   </div>
   <nav class="header-nav">
-    <a href="#" onclick="showTab('resultados')">
-      <i class="fas fa-chart-bar"></i> Resultados
-    </a>
-    <a href="#" onclick="openVotar()" id="nav-votar" class="btn-votar-nav">
-      <i class="fas fa-user"></i> Votar
-    </a>
-    <a href="#" onclick="logout()" id="nav-logout" style="display:none;">
-      <i class="fas fa-sign-out-alt"></i> Salir
-    </a>
+    <a onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Resultados</a>
+    <a onclick="showTab('votar')" id="nav-votar" class="btn-votar-nav"><i class="fas fa-user"></i> Votar</a>
+    <a onclick="logout()" id="nav-logout" style="display:none;"><i class="fas fa-sign-out-alt"></i> Salir</a>
   </nav>
 </header>
 
 <div id="user-bar" class="user-bar" style="display:none;">
-  <div class="user-bar-info">
-    <i class="fas fa-user-circle"></i>
-    <span id="user-name-display"></span>
-  </div>
+  <div class="user-bar-info"><i class="fas fa-user-circle"></i><span id="user-name-display"></span></div>
   <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
 </div>
 
 <main class="container">
   <div class="tabs">
-    <div class="tab active" onclick="showTab('votar')" id="tab-votar">
-      <i class="fas fa-check-circle"></i> Votar
-    </div>
-    <div class="tab" onclick="showTab('resultados')" id="tab-resultados">
-      <i class="fas fa-chart-bar"></i> Resultados en Vivo
-    </div>
-    <div class="tab" onclick="showTab('info')" id="tab-info">
-      <i class="fas fa-info-circle"></i> Informacion
-    </div>
+    <div class="tab active" onclick="showTab('votar')" id="tab-votar"><i class="fas fa-check-circle"></i> Votar</div>
+    <div class="tab" onclick="showTab('resultados')" id="tab-resultados"><i class="fas fa-chart-bar"></i> Resultados en Vivo</div>
+    <div class="tab" onclick="showTab('info')" id="tab-info"><i class="fas fa-info-circle"></i> Informacion</div>
   </div>
 
   <div id="panel-votar" class="tab-panel active">
@@ -237,7 +204,6 @@
         </button>
       </div>
     </div>
-
     <div id="already-voted-state" class="already-voted" style="display:none;">
       <i class="fas fa-check-circle"></i>
       <h3>Ya emitiste tu voto</h3>
@@ -245,7 +211,6 @@
       <br/>
       <button class="btn btn-primary" onclick="showTab('resultados')"><i class="fas fa-chart-bar"></i> Ver Resultados</button>
     </div>
-
     <div id="vote-state" style="display:none;">
       <div class="section-title"><i class="fas fa-flag" style="color:var(--red)"></i> Selecciona tu candidato</div>
       <div class="section-sub">Elecciones Generales Peru 2026 &bull; Toca una tarjeta para seleccionar</div>
@@ -266,9 +231,7 @@
       <div class="stat-box"><div class="stat-box-num gray" id="stat-nulos">-</div><div class="stat-box-label">Votos Nulos</div></div>
       <div class="stat-box"><div class="stat-box-num" id="stat-updated">-</div><div class="stat-box-label">Actualizado</div></div>
     </div>
-    <div class="results-list" id="results-list">
-      <div class="loading-spinner"></div>
-    </div>
+    <div class="results-list" id="results-list"><div class="loading-spinner"></div></div>
   </div>
 
   <div id="panel-info" class="tab-panel">
@@ -295,12 +258,8 @@
 </main>
 
 <div class="vote-confirm-bar" id="confirm-bar">
-  <div class="vote-selected-info">
-    Seleccionaste: <span id="confirm-candidate-name">-</span>
-  </div>
-  <button class="btn btn-primary" onclick="openVoteConfirm()">
-    <i class="fas fa-check"></i> Confirmar Voto
-  </button>
+  <div class="vote-selected-info">Seleccionaste: <span id="confirm-candidate-name">-</span></div>
+  <button class="btn btn-primary" onclick="openVoteConfirm()"><i class="fas fa-check"></i> Confirmar Voto</button>
 </div>
 
 <div class="modal-overlay" id="modal-vote-confirm">
@@ -320,52 +279,63 @@
 </div>
 
 <footer>
-  <div class="flag-peru"></div>
+  <span class="flag-peru"></span>
   <br/><br/>
   <strong>Voto Online Peru 2026</strong> &bull; Sondeo Independiente No Oficial<br/>
   Los datos son almacenados de forma anonima. Este sistema no reemplaza el voto oficial de la ONPE.<br/>
   Elecciones Generales &bull; 12 de Abril de 2026
 </footer>
 
-<script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// ══════════════════════════════════════════════
+//  CONFIGURA AQUI TUS CREDENCIALES DE SUPABASE
+// ══════════════════════════════════════════════
+const SUPABASE_URL = 'https://abmptuqnbmhrrwjykcnq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibXB0dXFuYm1ocnJ3anlrY25xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTM4NzcsImV4cCI6MjA4OTk4OTg3N30.aAE6a2-D2beVhluk7C0fH9kM7H4SC-MCs3Ch0CRRUdI';
+// ══════════════════════════════════════════════
+
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const CANDIDATES = [
-  {id:'fuerza_popular',      party:'Fuerza Popular',             name:'Keiko Fujimori',         color:'#cc0000', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fuerza_Popular_logo.svg/200px-Fuerza_Popular_logo.svg.png'},
-  {id:'alianza_progreso',    party:'Alianza Para el Progreso',   name:'Cesar Acuna',            color:'#f97316', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/APP_logo.png/200px-APP_logo.png'},
-  {id:'renovacion_popular',  party:'Renovacion Popular',         name:'Rafael Lopez Aliaga',    color:'#2563eb', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Renovaci%C3%B3n_Popular_logo.png/200px-Renovaci%C3%B3n_Popular_logo.png'},
-  {id:'avanza_pais',         party:'Avanza Pais',                name:'Jose Williams Zapata',   color:'#7c3aed', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Avanza_Pa%C3%ADs_logo.png/200px-Avanza_Pa%C3%ADs_logo.png'},
-  {id:'somos_peru',          party:'Somos Peru',                 name:'George Forsyth',         color:'#16a34a', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Somos_Per%C3%BA_logo.svg/200px-Somos_Per%C3%BA_logo.svg.png'},
-  {id:'peru_libre',          party:'Peru Libre',                 name:'Vladimir Cerron',        color:'#dc2626', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Peru_libre_logo.png/200px-Peru_libre_logo.png'},
-  {id:'podemos_peru',        party:'Podemos Peru',               name:'Jose Luna Galvez',       color:'#0891b2', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Podemos_Per%C3%BA_logo.png/200px-Podemos_Per%C3%BA_logo.png'},
-  {id:'juntos_peru',         party:'Juntos por el Peru',         name:'Roberto Sanchez',        color:'#dc7c02', logo:''},
-  {id:'partido_morado',      party:'Partido Morado',             name:'Mesias Guevara',         color:'#7c3aed', logo:''},
-  {id:'apra',                party:'Partido Aprista Peruano',    name:'Enrique Valderrama',     color:'#dc2626', logo:''},
-  {id:'ahora_nacion',        party:'Ahora Nacion',               name:'Alfonso Lopez-Chau',     color:'#059669', logo:''},
-  {id:'buen_gobierno',       party:'Partido del Buen Gobierno',  name:'Jorge Nieto',            color:'#0284c7', logo:''},
-  {id:'un_camino',           party:'Un Camino Diferente',        name:'Rosario Fernandez',      color:'#9333ea', logo:''},
-  {id:'patriotico',          party:'Partido Patriotico del Peru',name:'Herbert Caller',         color:'#1d4ed8', logo:''},
-  {id:'frente_esperanza',    party:'Frente de la Esperanza',     name:'Fernando Olivera',       color:'#ca8a04', logo:''},
-  {id:'primero_gente',       party:'Primero la Gente',           name:'Marisol Perez Tello',    color:'#16a34a', logo:''},
-  {id:'progresemos',         party:'Progresemos',                name:'Paul Jaimes',            color:'#0369a1', logo:''},
-  {id:'fe_peru',             party:'Fe en el Peru',              name:'Alvaro Paz de la Barra', color:'#b45309', logo:''},
-  {id:'pais_todos',          party:'Pais Para Todos',            name:'Carlos Alvarez',         color:'#0f766e', logo:''},
-  {id:'peru_accion',         party:'Peru Accion',                name:'Francisco Diez-Canseco', color:'#7c2d12', logo:''},
-  {id:'integridad',          party:'Integridad Democratica',     name:'Wolfgang Grozo',         color:'#1e40af', logo:''},
-  {id:'obras',               party:'Partido Civico Obras',       name:'Ricardo Belmont',        color:'#dc2626', logo:''},
-  {id:'pte',                 party:'PTE Peru',                   name:'Napoleon Becerra',       color:'#15803d', logo:''},
-  {id:'venceremos',          party:'Alianza Venceremos',         name:'Ronald Atencio',         color:'#7c3aed', logo:''},
-  {id:'cooperacion',         party:'Cooperacion Popular',        name:'Yonhy Lescano',          color:'#0369a1', logo:''},
-  {id:'peru_primero',        party:'Peru Primero',               name:'Mario Vizcarra',         color:'#be185d', logo:''},
-  {id:'democratico_federal', party:'Partido Democratico Federal',name:'Joaquin Masse',          color:'#1d4ed8', logo:''},
-  {id:'democrata_verde',     party:'Partido Democrata Verde',    name:'Alex Gonzales',          color:'#16a34a', logo:''},
-  {id:'unidad_nacional',     party:'Unidad Nacional',            name:'Roberto Chiabra',        color:'#0f172a', logo:''},
-  {id:'libertad_popular',    party:'Libertad Popular',           name:'Rafael Belaunde',        color:'#b45309', logo:''},
-  {id:'si_creo',             party:'Partido SiCreo',             name:'Carlos Espa',            color:'#7e22ce', logo:''},
-  {id:'salvemos_peru',       party:'Salvemos al Peru',           name:'Antonio Ortiz',          color:'#0369a1', logo:''},
-  {id:'fuerza_libertad',     party:'Fuerza y Libertad',          name:'Fiorella Molinelli',     color:'#b91c1c', logo:''},
-  {id:'peru_moderno',        party:'Peru Moderno',               name:'Carlos Jaico',           color:'#0284c7', logo:''},
-  {id:'prin',                party:'Partido PRIN',               name:'Walter Chirinos',        color:'#7c3aed', logo:''},
-  {id:'democrata_unido',     party:'Democrata Unido Peru',       name:'Charlie Carrasco',       color:'#0f766e', logo:''},
-  {id:'voto_nulo',           party:'Voto Nulo / En Blanco',      name:'Ninguno',                color:'#6b7280', logo:'', nulo:true},
+  { id: 'fuerza_popular',      party: 'Fuerza Popular',              name: 'Keiko Fujimori',         color: '#cc0000', icon: 'fa-star' },
+  { id: 'alianza_progreso',    party: 'Alianza Para el Progreso',    name: 'Cesar Acuna',             color: '#f97316', icon: 'fa-chart-line' },
+  { id: 'renovacion_popular',  party: 'Renovacion Popular',          name: 'Rafael Lopez Aliaga',     color: '#2563eb', icon: 'fa-rotate' },
+  { id: 'avanza_pais',         party: 'Avanza Pais',                 name: 'Jose Williams Zapata',    color: '#7c3aed', icon: 'fa-forward' },
+  { id: 'somos_peru',          party: 'Somos Peru',                  name: 'George Forsyth',          color: '#16a34a', icon: 'fa-leaf' },
+  { id: 'peru_libre',          party: 'Peru Libre',                  name: 'Vladimir Cerron',         color: '#dc2626', icon: 'fa-dove' },
+  { id: 'podemos_peru',        party: 'Podemos Peru',                name: 'Jose Luna Galvez',        color: '#0891b2', icon: 'fa-hand-fist' },
+  { id: 'juntos_peru',         party: 'Juntos por el Peru',          name: 'Roberto Sanchez',         color: '#dc7c02', icon: 'fa-people-group' },
+  { id: 'partido_morado',      party: 'Partido Morado',              name: 'Mesias Guevara',          color: '#7c3aed', icon: 'fa-circle' },
+  { id: 'apra',                party: 'Partido Aprista Peruano',     name: 'Enrique Valderrama',      color: '#dc2626', icon: 'fa-sun' },
+  { id: 'ahora_nacion',        party: 'Ahora Nacion',                name: 'Alfonso Lopez-Chau',      color: '#059669', icon: 'fa-flag' },
+  { id: 'buen_gobierno',       party: 'Partido del Buen Gobierno',   name: 'Jorge Nieto',             color: '#0284c7', icon: 'fa-scale-balanced' },
+  { id: 'un_camino',           party: 'Un Camino Diferente',         name: 'Rosario Fernandez',       color: '#9333ea', icon: 'fa-road' },
+  { id: 'patriotico',          party: 'Partido Patriotico del Peru', name: 'Herbert Caller',          color: '#1d4ed8', icon: 'fa-shield' },
+  { id: 'frente_esperanza',    party: 'Frente de la Esperanza',      name: 'Fernando Olivera',        color: '#ca8a04', icon: 'fa-seedling' },
+  { id: 'primero_gente',       party: 'Primero la Gente',            name: 'Marisol Perez Tello',     color: '#16a34a', icon: 'fa-users' },
+  { id: 'progresemos',         party: 'Progresemos',                 name: 'Paul Jaimes',             color: '#0369a1', icon: 'fa-arrow-up-right-dots' },
+  { id: 'fe_peru',             party: 'Fe en el Peru',               name: 'Alvaro Paz de la Barra',  color: '#b45309', icon: 'fa-cross' },
+  { id: 'pais_todos',          party: 'Pais Para Todos',             name: 'Carlos Alvarez',          color: '#0f766e', icon: 'fa-globe-americas' },
+  { id: 'peru_accion',         party: 'Peru Accion',                 name: 'Francisco Diez-Canseco',  color: '#7c2d12', icon: 'fa-bolt' },
+  { id: 'integridad',          party: 'Integridad Democratica',      name: 'Wolfgang Grozo',          color: '#1e40af', icon: 'fa-handshake' },
+  { id: 'obras',               party: 'Partido Civico Obras',        name: 'Ricardo Belmont',         color: '#dc2626', icon: 'fa-helmet-safety' },
+  { id: 'pte',                 party: 'PTE Peru',                    name: 'Napoleon Becerra',        color: '#15803d', icon: 'fa-mountain' },
+  { id: 'venceremos',          party: 'Alianza Venceremos',          name: 'Ronald Atencio',          color: '#7c3aed', icon: 'fa-fist-raised' },
+  { id: 'cooperacion',         party: 'Cooperacion Popular',         name: 'Yonhy Lescano',           color: '#0369a1', icon: 'fa-hands-helping' },
+  { id: 'peru_primero',        party: 'Peru Primero',                name: 'Mario Vizcarra',          color: '#be185d', icon: 'fa-medal' },
+  { id: 'democratico_federal', party: 'Partido Democratico Federal', name: 'Joaquin Masse',           color: '#1d4ed8', icon: 'fa-building-columns' },
+  { id: 'democrata_verde',     party: 'Partido Democrata Verde',     name: 'Alex Gonzales',           color: '#16a34a', icon: 'fa-tree' },
+  { id: 'unidad_nacional',     party: 'Unidad Nacional',             name: 'Roberto Chiabra',         color: '#0f172a', icon: 'fa-link' },
+  { id: 'libertad_popular',    party: 'Libertad Popular',            name: 'Rafael Belaunde',         color: '#b45309', icon: 'fa-unlock' },
+  { id: 'si_creo',             party: 'Partido SiCreo',              name: 'Carlos Espa',             color: '#7e22ce', icon: 'fa-lightbulb' },
+  { id: 'salvemos_peru',       party: 'Salvemos al Peru',            name: 'Antonio Ortiz',           color: '#0369a1', icon: 'fa-life-ring' },
+  { id: 'fuerza_libertad',     party: 'Fuerza y Libertad',           name: 'Fiorella Molinelli',      color: '#b91c1c', icon: 'fa-fire' },
+  { id: 'peru_moderno',        party: 'Peru Moderno',                name: 'Carlos Jaico',            color: '#0284c7', icon: 'fa-city' },
+  { id: 'prin',                party: 'Partido PRIN',                name: 'Walter Chirinos',         color: '#7c3aed', icon: 'fa-p' },
+  { id: 'democrata_unido',     party: 'Democrata Unido Peru',        name: 'Charlie Carrasco',        color: '#0f766e', icon: 'fa-circle-half-stroke' },
+  { id: 'voto_nulo',           party: 'Voto Nulo / En Blanco',       name: 'Ninguno',                 color: '#6b7280', icon: 'fa-ban', nulo: true },
 ];
 
 let currentUser = null;
@@ -373,28 +343,47 @@ let selectedCandidate = null;
 let hasVoted = false;
 let resultsInterval = null;
 
-function getInitials(name){
-  return name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+// ── Helpers UI ─────────────────────────────────
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.style.display = 'flex';
+  el.querySelector('span').textContent = msg;
 }
+function hideError(id) { document.getElementById(id).style.display = 'none'; }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+window.closeModal = closeModal;
 
-function buildCandidatesGrid(){
+// ── Tabs ───────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name)?.classList.add('active');
+  document.getElementById('panel-' + name)?.classList.add('active');
+  if (name === 'resultados') {
+    loadResults();
+    clearInterval(resultsInterval);
+    resultsInterval = setInterval(loadResults, 15000);
+  } else {
+    clearInterval(resultsInterval);
+  }
+}
+window.showTab = showTab;
+
+// ── Candidatos grid ────────────────────────────
+function buildCandidatesGrid() {
   const grid = document.getElementById('candidates-grid');
   grid.innerHTML = '';
-  CANDIDATES.forEach(c=>{
+  CANDIDATES.forEach(c => {
     const card = document.createElement('div');
     card.className = 'candidate-card' + (c.nulo ? ' nulo' : '');
     card.dataset.id = c.id;
     card.onclick = () => selectCandidate(c.id);
-    let logoHtml = '';
-    if(c.logo){
-      logoHtml = `<img class="party-logo" src="${c.logo}" alt="${c.party}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-                  <div class="party-logo-placeholder" style="background:${c.color};display:none;">${getInitials(c.party)}</div>`;
-    } else {
-      logoHtml = `<div class="party-logo-placeholder" style="background:${c.color};">${getInitials(c.party)}</div>`;
-    }
     card.innerHTML = `
       <div class="candidate-check"><i class="fas fa-check"></i></div>
-      ${logoHtml}
+      <div class="cand-icon" style="background:${c.color}">
+        <i class="fas ${c.icon}"></i>
+      </div>
       <div class="candidate-party">${c.party}</div>
       <div class="candidate-name">${c.nulo ? '<i class="fas fa-ban"></i> Voto Nulo' : c.name}</div>
     `;
@@ -402,89 +391,42 @@ function buildCandidatesGrid(){
   });
 }
 
-function selectCandidate(id){
-  if(!currentUser){ openVotar(); return; }
-  if(hasVoted) return;
+function selectCandidate(id) {
+  if (!currentUser) { showTab('votar'); return; }
+  if (hasVoted) return;
   selectedCandidate = id;
-  document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
   document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
-  const cand = CANDIDATES.find(c=>c.id===id);
-  const bar = document.getElementById('confirm-bar');
-  const nameEl = document.getElementById('confirm-candidate-name');
-  if(cand){ nameEl.textContent = cand.nulo ? 'Voto Nulo / En Blanco' : cand.name + ' (' + cand.party + ')'; }
-  bar.classList.add('show');
+  const cand = CANDIDATES.find(c => c.id === id);
+  document.getElementById('confirm-candidate-name').textContent =
+    cand?.nulo ? 'Voto Nulo / En Blanco' : `${cand?.name} (${cand?.party})`;
+  document.getElementById('confirm-bar').classList.add('show');
 }
 
-function openVotar(){
-  if(currentUser) return;
-  document.getElementById('not-logged-state').style.display = 'block';
-  showTab('votar');
-  setTimeout(()=>document.getElementById('entry-name')?.focus(), 100);
-}
-
-function openVoteConfirm(){
-  if(!selectedCandidate) return;
-  const cand = CANDIDATES.find(c=>c.id===selectedCandidate);
-  let logoHtml = cand.logo
-    ? `<img src="${cand.logo}" style="width:70px;height:70px;object-fit:contain;border-radius:6px;margin-bottom:8px;" onerror="this.style.display='none'">`
-    : `<div style="width:70px;height:70px;border-radius:6px;background:${cand.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:700;margin:0 auto 8px;">${getInitials(cand.party)}</div>`;
-  document.getElementById('vote-confirm-detail').innerHTML = `
-    ${logoHtml}
-    <div style="font-size:.72rem;font-weight:700;color:${cand.color};text-transform:uppercase;">${cand.party}</div>
-    <div style="font-size:1rem;font-weight:700;margin-top:4px;">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
-  `;
-  hideError('vote-error');
-  openModal('modal-vote-confirm');
-}
-
-async function confirmVote(){
-  const btn = document.getElementById('vote-btn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-  try {
-    const res = await fetch('/api/vote', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ candidate_id: selectedCandidate })
-    });
-    const data = await res.json();
-    if(!res.ok) throw new Error(data.error||'Error al registrar voto');
-    closeModal('modal-vote-confirm');
-    hasVoted = true;
-    showAlreadyVoted();
-    loadResults();
-  } catch(e){
-    showError('vote-error', e.message);
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Si, Confirmar Voto';
-  }
-}
-
-function showAlreadyVoted(){
-  document.getElementById('vote-state').style.display = 'none';
-  document.getElementById('already-voted-state').style.display = 'block';
-  document.getElementById('confirm-bar').classList.remove('show');
-}
-
-async function doRegister(){
+// ── Registro ───────────────────────────────────
+async function doRegister() {
   const name = document.getElementById('entry-name').value.trim();
   hideError('entry-error');
-  if(!name || name.length < 2){ showError('entry-error','Ingresa tu nombre completo'); return; }
+  if (!name || name.length < 2) { showError('entry-error', 'Ingresa tu nombre completo'); return; }
   const btn = document.getElementById('entry-btn');
-  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Entrando...';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
   try {
-    const res = await fetch('/api/register', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({name})
-    });
-    const data = await res.json();
-    if(!res.ok) throw new Error(data.error||'Error');
-    setCurrentUser(data.user);
-  } catch(e){
+    const id = crypto.randomUUID();
+    const { error } = await db.from('users').insert([{ id, name }]);
+    if (error) throw new Error(error.message);
+    const user = { id, name };
+    localStorage.setItem('voto_user', JSON.stringify(user));
+    setCurrentUser(user);
+  } catch (e) {
     showError('entry-error', e.message);
   }
-  btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Votar';
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a Votar';
 }
+window.doRegister = doRegister;
 
-function setCurrentUser(user){
+function setCurrentUser(user) {
   currentUser = user;
   document.getElementById('nav-votar').style.display = 'none';
   document.getElementById('nav-logout').style.display = '';
@@ -494,88 +436,123 @@ function setCurrentUser(user){
   checkVoted();
 }
 
-async function checkVoted(){
-  if(!currentUser) return;
-  try {
-    const res = await fetch('/api/check-voted');
-    const data = await res.json();
-    if(data.voted){
-      hasVoted = true;
-      showAlreadyVoted();
-    } else {
-      document.getElementById('vote-state').style.display = 'block';
-    }
-  } catch(e){ document.getElementById('vote-state').style.display = 'block'; }
+// ── Verificar voto ─────────────────────────────
+async function checkVoted() {
+  if (!currentUser) return;
+  const { data } = await db.from('votes').select('id').eq('user_id', currentUser.id).maybeSingle();
+  if (data) {
+    hasVoted = true;
+    showAlreadyVoted();
+  } else {
+    document.getElementById('vote-state').style.display = 'block';
+  }
 }
 
-async function loadResults(){
+function showAlreadyVoted() {
+  document.getElementById('vote-state').style.display = 'none';
+  document.getElementById('already-voted-state').style.display = 'block';
+  document.getElementById('confirm-bar').classList.remove('show');
+}
+
+// ── Confirmar voto ─────────────────────────────
+function openVoteConfirm() {
+  if (!selectedCandidate) return;
+  const cand = CANDIDATES.find(c => c.id === selectedCandidate);
+  document.getElementById('vote-confirm-detail').innerHTML = `
+    <div style="width:70px;height:70px;border-radius:10px;background:${cand.color};
+      display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;margin:0 auto 10px;">
+      <i class="fas ${cand.icon}"></i>
+    </div>
+    <div style="font-size:.72rem;font-weight:700;color:${cand.color};text-transform:uppercase;">${cand.party}</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px;">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
+  `;
+  hideError('vote-error');
+  openModal('modal-vote-confirm');
+}
+window.openVoteConfirm = openVoteConfirm;
+
+async function confirmVote() {
+  const btn = document.getElementById('vote-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+  try {
+    // verificar doble voto
+    const { data: existing } = await db.from('votes').select('id').eq('user_id', currentUser.id).maybeSingle();
+    if (existing) throw new Error('Ya has emitido tu voto');
+    const { error } = await db.from('votes').insert([{ user_id: currentUser.id, candidate_id: selectedCandidate }]);
+    if (error) throw new Error(error.message);
+    closeModal('modal-vote-confirm');
+    hasVoted = true;
+    showAlreadyVoted();
+    loadResults();
+  } catch (e) {
+    showError('vote-error', e.message);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Si, Confirmar Voto';
+  }
+}
+window.confirmVote = confirmVote;
+
+// ── Resultados ─────────────────────────────────
+async function loadResults() {
   const list = document.getElementById('results-list');
   try {
-    const res = await fetch('/api/results');
-    const data = await res.json();
-    if(!data.results) return;
-    const total = data.total || 0;
-    const nulos = data.results.find(r=>r.candidate_id==='voto_nulo');
-    const nulo_count = nulos ? nulos.count : 0;
-    document.getElementById('stat-total').textContent = total.toLocaleString();
-    document.getElementById('stat-nulos').textContent = nulo_count.toLocaleString();
+    const { data, error } = await db.from('votes').select('candidate_id');
+    if (error) throw error;
+    const counts = {};
+    (data || []).forEach(v => { counts[v.candidate_id] = (counts[v.candidate_id] || 0) + 1; });
+    const results = Object.entries(counts).map(([candidate_id, count]) => ({ candidate_id, count }));
+    const total = results.reduce((s, r) => s + r.count, 0);
+
+    const nuloCount = counts['voto_nulo'] || 0;
+    document.getElementById('stat-total').textContent = total.toLocaleString('es-PE');
+    document.getElementById('stat-nulos').textContent = nuloCount.toLocaleString('es-PE');
     document.getElementById('stat-updated').textContent = new Date().toLocaleTimeString('es-PE');
-    const topCand = data.results.filter(r=>r.candidate_id!=='voto_nulo')[0];
-    if(topCand){
-      const c = CANDIDATES.find(x=>x.id===topCand.candidate_id);
+
+    const sorted = [...results].sort((a, b) => b.count - a.count);
+    const top = sorted.find(r => r.candidate_id !== 'voto_nulo');
+    if (top) {
+      const c = CANDIDATES.find(x => x.id === top.candidate_id);
       document.getElementById('stat-lider').textContent = c ? c.name.split(' ')[0] : '-';
+    } else {
+      document.getElementById('stat-lider').textContent = '-';
     }
-    const sorted = [...data.results].sort((a,b)=>b.count-a.count);
+
     list.innerHTML = '';
-    sorted.forEach((r,i)=>{
-      const cand = CANDIDATES.find(c=>c.id===r.candidate_id);
-      if(!cand) return;
-      const pct = total > 0 ? ((r.count/total)*100).toFixed(1) : '0.0';
-      let logoHtml = cand.logo
-        ? `<img class="result-logo" src="${cand.logo}" alt="${cand.party}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-        : '';
+    if (sorted.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)"><i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px"></i>Aun no hay votos registrados</div>';
+      return;
+    }
+    sorted.forEach((r, i) => {
+      const cand = CANDIDATES.find(c => c.id === r.candidate_id);
+      if (!cand) return;
+      const pct = total > 0 ? ((r.count / total) * 100).toFixed(1) : '0.0';
       const item = document.createElement('div');
-      item.className = 'result-item' + (cand.nulo?' nulo':'');
+      item.className = 'result-item' + (cand.nulo ? ' nulo' : '');
       item.innerHTML = `
-        <div class="result-rank">${i+1}</div>
-        ${logoHtml}
-        <div class="result-logo-ph" style="background:${cand.color};${cand.logo?'display:none;':''}">${getInitials(cand.party)}</div>
+        <div class="result-rank">${i + 1}</div>
+        <div class="result-icon" style="background:${cand.color}"><i class="fas ${cand.icon}"></i></div>
         <div class="result-info">
           <div class="result-party">${cand.party}</div>
           <div class="result-name">${cand.nulo ? 'Voto Nulo / En Blanco' : cand.name}</div>
-          <div class="result-votes">${r.count.toLocaleString()} votos</div>
+          <div class="result-votes">${r.count.toLocaleString('es-PE')} votos</div>
         </div>
         <div class="result-bar-wrap">
-          <div class="result-bar"><div class="result-bar-fill${cand.nulo?' gray':''}" style="width:${pct}%"></div></div>
+          <div class="result-bar"><div class="result-bar-fill${cand.nulo ? ' gray' : ''}" style="width:${pct}%"></div></div>
         </div>
         <div class="result-pct">${pct}%</div>
       `;
       list.appendChild(item);
     });
-    if(sorted.length === 0){ list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)"><i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px"></i>Aun no hay votos registrados</div>'; }
-  } catch(e){ list.innerHTML = '<div style="text-align:center;color:var(--gray);padding:20px">Error cargando resultados</div>'; }
+  } catch (e) {
+    list.innerHTML = '<div style="text-align:center;color:var(--gray);padding:20px"><i class="fas fa-triangle-exclamation"></i> Error cargando resultados</div>';
+  }
 }
 
-function showTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+name)?.classList.add('active');
-  document.getElementById('panel-'+name)?.classList.add('active');
-  if(name==='resultados'){ loadResults(); clearInterval(resultsInterval); resultsInterval = setInterval(loadResults,15000); }
-  else { clearInterval(resultsInterval); }
-}
-
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-
-function showError(id, msg){ const el=document.getElementById(id); el.style.display='flex'; el.querySelector('span').textContent=msg; }
-function hideError(id){ document.getElementById(id).style.display='none'; }
-
-async function logout(){
-  await fetch('/api/logout', {method:'POST'});
-  currentUser = null;
-  hasVoted = false;
-  selectedCandidate = null;
+// ── Logout ─────────────────────────────────────
+function logout() {
+  localStorage.removeItem('voto_user');
+  currentUser = null; hasVoted = false; selectedCandidate = null;
   document.getElementById('nav-votar').style.display = '';
   document.getElementById('nav-logout').style.display = 'none';
   document.getElementById('user-bar').style.display = 'none';
@@ -583,27 +560,29 @@ async function logout(){
   document.getElementById('vote-state').style.display = 'none';
   document.getElementById('already-voted-state').style.display = 'none';
   document.getElementById('confirm-bar').classList.remove('show');
-  document.querySelectorAll('.candidate-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('entry-name').value = '';
 }
+window.logout = logout;
 
-async function restoreSession(){
+// ── Restaurar sesion del localStorage ──────────
+function restoreSession() {
   try {
-    const res = await fetch('/api/session');
-    const data = await res.json();
-    if(data.user){ setCurrentUser(data.user); }
-  } catch(e){}
+    const saved = localStorage.getItem('voto_user');
+    if (saved) setCurrentUser(JSON.parse(saved));
+  } catch (e) {}
 }
 
-document.addEventListener('DOMContentLoaded', async ()=>{
+// ── Init ───────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   buildCandidatesGrid();
-  await restoreSession();
+  restoreSession();
   loadResults();
   setInterval(loadResults, 15000);
 });
 
-document.querySelectorAll('.modal-overlay').forEach(m=>{
-  m.addEventListener('click', e=>{ if(e.target===m) closeModal(m.id); });
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
 });
 </script>
 </body>
