@@ -1,239 +1,125 @@
-const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
-const path = require('path');
-const rateLimit = require('express-rate-limit');
-const session = require('express-session');
-const axios = require('axios');
+const express = require("express");
+const session = require("express-session");
+const { createClient } = require("@supabase/supabase-js");
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
+const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
 
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.urlencoded({ extended: true }));
 
-const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+app.use(
+  session({
+    secret: "clave_super_secreta_2026",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+const supabase = createClient(
+  "https://lmrkjbyjzoztmyyeccdt.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtcmtqYnlqem96dG15eWVjY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTkyMzYsImV4cCI6MjA4OTk3NTIzNn0.k9pJ5yp4zvDdLH8VyqkAb86sp4Jb6aKYtYZLKwsAnKo"
+);
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+  service: "gmail",
+  auth: {
+    user: "shieldgramorganization@gmail.com",
+    pass: "wyknehhgagbtejeq",
+  },
 });
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  }
-}));
+app.use(express.static("public"));
 
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 60 });
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
-const voteLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3 });
-
-app.use(limiter);
-
-async function verifyCaptcha(token) {
-  if (!token) return false;
-  if (token === 'test-token-bypass') return true;
-  try {
-    const res = await axios.post('https://hcaptcha.com/siteverify', new URLSearchParams({
-      secret: process.env.HCAPTCHA_SECRET,
-      response: token
-    }));
-    return res.data.success === true;
-  } catch (e) {
-    return false;
-  }
-}
-
-async function getClientIP(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || req.headers['x-real-ip']
-    || req.connection?.remoteAddress
-    || req.ip;
-}
-
-app.get('/api/check-geo', async (req, res) => {
-  try {
-    const ip = await getClientIP(req);
-    const geoRes = await axios.get(`https://ipapi.co/${ip}/json/`);
-    const country = geoRes.data?.country_code;
-    if (country !== 'PE') {
-      return res.json({ allowed: false });
-    }
-    res.json({ allowed: true });
-  } catch (e) {
-    res.json({ allowed: true });
-  }
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post('/api/register', authLimiter, async (req, res) => {
-  try {
-    const { email, name, password, captcha_token } = req.body;
+app.post("/register", async (req, res) => {
+  const { email, name, password } = req.body;
 
-    if (!email || !name || !password) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
+  const hash = await bcrypt.hash(password, 10);
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otp_exp = new Date(Date.now() + 10 * 60 * 1000);
 
-    const captchaOK = await verifyCaptcha(captcha_token);
-    if (!captchaOK) {
-      return res.status(400).json({ error: 'Captcha invalido' });
-    }
+  const { data, error } = await supabase
+    .from("users")
+    .insert([
+      {
+        email,
+        name,
+        password_hash: hash,
+        otp_code: otp,
+        otp_expires_at: otp_exp,
+      },
+    ])
+    .select()
+    .single();
 
-    const { data: existing } = await sb.from('users')
-      .select('id')
-      .eq('email', email.toLowerCase())
-      .single();
+  if (error) return res.send("Error registro");
 
-    if (existing) {
-      return res.status(400).json({ error: 'Correo ya registrado' });
-    }
-
-    const hash = await bcrypt.hash(password, 12);
-    const otp = crypto.randomInt(100000, 999999).toString();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
-    const { data: user, error } = await sb.from('users').insert({
-      email: email.toLowerCase(),
-      name,
-      password_hash: hash,
-      otp_code: otp,
-      otp_expires_at: otpExpiry,
-      verified: false
-    }).select().single();
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Codigo de verificacion',
-      html: `<h2>Tu codigo es: ${otp}</h2>`
-    });
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: 'Error interno' });
-  }
-});
-
-app.post('/api/verify-otp', async (req, res) => {
-  try {
-    const { email, code } = req.body;
-
-    const { data: user } = await sb.from('users')
-      .select('*')
-      .eq('email', email.toLowerCase())
-      .single();
-
-    if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
-    if (user.otp_code !== code) return res.status(400).json({ error: 'Codigo incorrecto' });
-    if (new Date(user.otp_expires_at) < new Date()) return res.status(400).json({ error: 'Codigo expirado' });
-
-    await sb.from('users')
-      .update({ verified: true, otp_code: null, otp_expires_at: null })
-      .eq('id', user.id);
-
-    req.session.user = {
-      id: user.id,
-      email: user.email,
-      name: user.name
-    };
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: 'Error verificando codigo' });
-  }
-});
-
-app.post('/api/login', authLimiter, async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const { data: user } = await sb.from('users')
-      .select('*')
-      .eq('email', email.toLowerCase())
-      .single();
-
-    if (!user) return res.status(401).json({ error: 'Credenciales incorrectas' });
-    if (!user.verified) return res.status(401).json({ error: 'Cuenta no verificada' });
-
-    const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) return res.status(401).json({ error: 'Credenciales incorrectas' });
-
-    req.session.user = {
-      id: user.id,
-      email: user.email,
-      name: user.name
-    };
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: 'Error login' });
-  }
-});
-
-app.post('/api/vote', voteLimiter, async (req, res) => {
-  try {
-    if (!req.session?.user) {
-      return res.status(401).json({ error: 'Debes iniciar sesion' });
-    }
-
-    const { candidate_id } = req.body;
-
-    const { data: existingVote } = await sb.from('votes')
-      .select('id')
-      .eq('user_id', req.session.user.id)
-      .single();
-
-    if (existingVote) {
-      return res.status(400).json({ error: 'Ya votaste' });
-    }
-
-    const ip = await getClientIP(req);
-    const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
-
-    await sb.from('votes').insert({
-      user_id: req.session.user.id,
-      candidate_id,
-      ip_hash: ipHash,
-      voted_at: new Date().toISOString()
-    });
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: 'Error al votar' });
-  }
-});
-
-app.get('/api/results', async (req, res) => {
-  const { data } = await sb.from('votes').select('candidate_id');
-
-  const counts = {};
-  data.forEach(v => {
-    counts[v.candidate_id] = (counts[v.candidate_id] || 0) + 1;
+  await transporter.sendMail({
+    from: "shieldgramorganization@gmail.com",
+    to: email,
+    subject: "Codigo de verificacion",
+    text: "Tu codigo es: " + otp,
   });
 
-  res.json(counts);
+  res.send("Registro exitoso, revisa tu correo");
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email)
+    .single();
+
+  if (!data) return res.send("Usuario no existe");
+
+  const valid = await bcrypt.compare(password, data.password_hash);
+
+  if (!valid) return res.send("Password incorrecto");
+
+  req.session.user_id = data.id;
+
+  res.send("Login correcto");
 });
 
-const PORT = process.env.PORT || 3000;
+app.post("/vote", async (req, res) => {
+  if (!req.session.user_id) return res.send("Login primero");
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+  const { candidate } = req.body;
+
+  const ip =
+    req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
+  const ip_hash = crypto.createHash("sha256").update(ip).digest("hex");
+
+  const { error } = await supabase.from("votes").insert([
+    {
+      user_id: req.session.user_id,
+      candidate_id: candidate,
+      ip_hash: ip_hash,
+    },
+  ]);
+
+  if (error) return res.send("Ya votaste o error");
+
+  res.send("Voto registrado");
+});
+
+app.get("/results", async (req, res) => {
+  const { data } = await supabase.from("public_results").select("*");
+  res.json(data);
+});
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log("Servidor corriendo en puerto 3000");
 });
