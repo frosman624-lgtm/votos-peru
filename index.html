@@ -7,9 +7,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     :root {
-      --red: #cc0000; --red2: #e60000; --white: #fff; --light: #f5f5f5;
-      --gray: #6b7280; --dark: #111827; --border: #d1d5db;
-      --green: #16a34a; --blue: #2563eb; --shadow: 0 2px 8px rgba(0,0,0,.12);
+      --red: #cc0000; --red2: #e60000; --white: #1e2530; --light: #1a1f28;
+      --gray: #9ca3af; --dark: #e8eaf0; --border: #2e3748;
+      --green: #22c55e; --blue: #60a5fa; --shadow: 0 2px 8px rgba(0,0,0,.35);
+      --card-bg: #232b38; --input-bg: #1e2530; --user-bar-bg: #1a1f28;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--dark); }
@@ -44,17 +45,17 @@
     .section-sub { font-size: .83rem; color: var(--gray); margin-bottom: 20px; }
 
     .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: .88rem; display: flex; align-items: flex-start; gap: 10px; }
-    .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
-    .alert-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
-    .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .alert-info { background: #1a2540; border: 1px solid #1e40af; color: #93c5fd; }
+    .alert-warn { background: #2a2510; border: 1px solid #78560a; color: #fbbf24; }
+    .alert-success { background: #0f2318; border: 1px solid #166534; color: #4ade80; }
+    .alert-error { background: #2a1212; border: 1px solid #7f1d1d; color: #fca5a5; }
     .alert i { margin-top: 1px; flex-shrink: 0; }
 
-    .card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
 
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; transition: border .2s; background: #fff; }
+    .form-group input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; transition: border .2s; background: var(--card-bg); }
     .form-group input:focus { outline: none; border-color: var(--red2); box-shadow: 0 0 0 3px rgba(204,0,0,.08); }
 
     .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: 8px; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .2s; }
@@ -62,19 +63,19 @@
     .btn-primary:hover { background: var(--red); transform: translateY(-1px); }
     .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
     .btn-secondary { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
-    .btn-secondary:hover { background: #e5e7eb; }
+    .btn-secondary:hover { background: #2e3748; }
     .btn-full { width: 100%; justify-content: center; }
 
     .candidates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
     .candidate-card {
-      background: #fff; border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px;
+      background: var(--card-bg); border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px;
       text-align: center; cursor: pointer; transition: all .2s; position: relative;
     }
     .candidate-card:hover { border-color: var(--red2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(204,0,0,.12); }
-    .candidate-card.selected { border-color: var(--red2); background: #fff5f5; box-shadow: 0 0 0 3px rgba(204,0,0,.15); }
+    .candidate-card.selected { border-color: var(--red2); background: #2a1f1f; box-shadow: 0 0 0 3px rgba(204,0,0,.15); }
     .candidate-card.nulo { border-color: #6b7280; }
-    .candidate-card.nulo:hover { border-color: #374151; background: #f3f4f6; }
-    .candidate-card.nulo.selected { border-color: #374151; background: #f3f4f6; box-shadow: 0 0 0 3px rgba(107,114,128,.2); }
+    .candidate-card.nulo:hover { border-color: #6b7280; background: #2a2f3a; }
+    .candidate-card.nulo.selected { border-color: #6b7280; background: #2a2f3a; box-shadow: 0 0 0 3px rgba(107,114,128,.2); }
     .candidate-check {
       position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
       background: var(--red2); color: #fff; border-radius: 50%;
@@ -92,7 +93,7 @@
     .candidate-card.nulo .candidate-party { color: #4b5563; }
 
     .vote-confirm-bar {
-      position: sticky; bottom: 0; background: #fff; border-top: 2px solid var(--border);
+      position: sticky; bottom: 0; background: #1e2530; border-top: 2px solid var(--border);
       padding: 12px 20px; display: none; align-items: center; justify-content: space-between;
       box-shadow: 0 -4px 12px rgba(0,0,0,.08); gap: 12px; flex-wrap: wrap; z-index: 50;
     }
@@ -101,14 +102,14 @@
     .vote-selected-info span { color: var(--red2); }
 
     .results-list { display: flex; flex-direction: column; gap: 10px; }
-    .result-item { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+    .result-item { display: flex; align-items: center; gap: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
     .result-rank { font-size: .85rem; font-weight: 700; color: var(--gray); width: 24px; text-align: center; }
     .result-icon { width: 44px; height: 44px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
     .result-info { flex: 1; min-width: 0; }
     .result-party { font-size: .75rem; color: var(--red2); font-weight: 700; text-transform: uppercase; }
     .result-name { font-size: .88rem; font-weight: 600; color: var(--dark); }
     .result-bar-wrap { flex: 2; min-width: 80px; }
-    .result-bar { height: 10px; border-radius: 5px; background: #e5e7eb; overflow: hidden; }
+    .result-bar { height: 10px; border-radius: 5px; background: #2e3748; overflow: hidden; }
     .result-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #cc0000, #e60000); transition: width 1s ease; }
     .result-bar-fill.gray { background: #6b7280; }
     .result-pct { font-size: .82rem; font-weight: 700; color: var(--dark); min-width: 44px; text-align: right; }
@@ -116,14 +117,14 @@
     .result-item.nulo .result-party { color: #4b5563; }
 
     .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .stat-box { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
+    .stat-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
     .stat-box-num { font-size: 1.6rem; font-weight: 800; color: var(--red2); }
     .stat-box-num.gray { color: var(--gray); }
     .stat-box-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.open { display: flex; }
-    .modal { background: #fff; border-radius: 16px; padding: 28px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+    .modal { background: var(--card-bg); border-radius: 16px; padding: 28px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
     .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
     .modal-sub { font-size: .85rem; color: var(--gray); margin-bottom: 20px; }
     .modal-close { float: right; background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--gray); margin-top: -4px; }
@@ -136,7 +137,7 @@
     .already-voted h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
     .already-voted p { font-size: .88rem; color: var(--gray); }
 
-    .user-bar { background: var(--light); border-bottom: 1px solid var(--border); padding: 8px 16px; font-size: .82rem; color: var(--gray); display: flex; align-items: center; justify-content: space-between; }
+    .user-bar { background: #1a1f28; border-bottom: 1px solid var(--border); padding: 8px 16px; font-size: .82rem; color: var(--gray); display: flex; align-items: center; justify-content: space-between; }
     .user-bar-info { display: flex; align-items: center; gap: 6px; }
     .logout-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: .82rem; }
     .logout-btn:hover { color: var(--red); }
@@ -238,11 +239,11 @@
     <div class="card">
       <div class="section-title"><i class="fas fa-shield-alt" style="color:var(--red)"></i> Como funciona este sistema</div>
       <br/>
-      <p style="font-size:.9rem;line-height:1.7;color:#374151;">
+      <p style="font-size:.9rem;line-height:1.7;color:#cbd5e1;">
         Este es un sistema de sondeo independiente para las Elecciones Generales del Peru 2026. No es el sistema oficial de la ONPE.
       </p>
       <br/>
-      <ul style="font-size:.88rem;line-height:2;color:#374151;padding-left:20px;">
+      <ul style="font-size:.88rem;line-height:2;color:#cbd5e1;padding-left:20px;">
         <li><i class="fas fa-check" style="color:var(--green)"></i> Solo ingresa tu nombre para participar</li>
         <li><i class="fas fa-check" style="color:var(--green)"></i> Un solo voto por sesion</li>
         <li><i class="fas fa-check" style="color:var(--green)"></i> Resultados en tiempo real</li>
@@ -267,7 +268,7 @@
     <button class="modal-close" onclick="closeModal('modal-vote-confirm')"><i class="fas fa-times"></i></button>
     <div class="modal-title"><i class="fas fa-exclamation-triangle" style="color:#d97706"></i> Confirmar Voto</div>
     <div class="modal-sub">Esta accion no puede deshacerse. Tu voto es permanente.</div>
-    <div id="vote-confirm-detail" style="background:var(--light);border-radius:10px;padding:16px;margin-bottom:16px;text-align:center;"></div>
+    <div id="vote-confirm-detail" style="background:#1a1f28;border-radius:10px;padding:16px;margin-bottom:16px;text-align:center;"></div>
     <div id="vote-error" class="alert alert-error" style="display:none;"><i class="fas fa-times-circle"></i><span></span></div>
     <div style="display:flex;gap:10px;">
       <button class="btn btn-secondary" style="flex:1" onclick="closeModal('modal-vote-confirm')">Cancelar</button>
@@ -289,53 +290,53 @@
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ══════════════════════════════════════════════
-//  CONFIGURA AQUI TUS CREDENCIALES DE SUPABASE
-// ══════════════════════════════════════════════
-const SUPABASE_URL = 'https://abmptuqnbmhrrwjykcnq.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibXB0dXFuYm1ocnJ3anlrY25xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTM4NzcsImV4cCI6MjA4OTk4OTg3N30.aAE6a2-D2beVhluk7C0fH9kM7H4SC-MCs3Ch0CRRUdI';
-// ══════════════════════════════════════════════
+
+
+
+const SUPABASE_URL = 'https://TU_PROYECTO.supabase.co';
+const SUPABASE_KEY = 'TU_ANON_KEY';
+
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const CANDIDATES = [
-  { id: 'fuerza_popular',      party: 'Fuerza Popular',              name: 'Keiko Fujimori',         color: '#cc0000', icon: 'fa-star' },
-  { id: 'alianza_progreso',    party: 'Alianza Para el Progreso',    name: 'Cesar Acuna',             color: '#f97316', icon: 'fa-chart-line' },
-  { id: 'renovacion_popular',  party: 'Renovacion Popular',          name: 'Rafael Lopez Aliaga',     color: '#2563eb', icon: 'fa-rotate' },
-  { id: 'avanza_pais',         party: 'Avanza Pais',                 name: 'Jose Williams Zapata',    color: '#7c3aed', icon: 'fa-forward' },
-  { id: 'somos_peru',          party: 'Somos Peru',                  name: 'George Forsyth',          color: '#16a34a', icon: 'fa-leaf' },
-  { id: 'peru_libre',          party: 'Peru Libre',                  name: 'Vladimir Cerron',         color: '#dc2626', icon: 'fa-dove' },
-  { id: 'podemos_peru',        party: 'Podemos Peru',                name: 'Jose Luna Galvez',        color: '#0891b2', icon: 'fa-hand-fist' },
-  { id: 'juntos_peru',         party: 'Juntos por el Peru',          name: 'Roberto Sanchez',         color: '#dc7c02', icon: 'fa-people-group' },
-  { id: 'partido_morado',      party: 'Partido Morado',              name: 'Mesias Guevara',          color: '#7c3aed', icon: 'fa-circle' },
-  { id: 'apra',                party: 'Partido Aprista Peruano',     name: 'Enrique Valderrama',      color: '#dc2626', icon: 'fa-sun' },
-  { id: 'ahora_nacion',        party: 'Ahora Nacion',                name: 'Alfonso Lopez-Chau',      color: '#059669', icon: 'fa-flag' },
-  { id: 'buen_gobierno',       party: 'Partido del Buen Gobierno',   name: 'Jorge Nieto',             color: '#0284c7', icon: 'fa-scale-balanced' },
-  { id: 'un_camino',           party: 'Un Camino Diferente',         name: 'Rosario Fernandez',       color: '#9333ea', icon: 'fa-road' },
-  { id: 'patriotico',          party: 'Partido Patriotico del Peru', name: 'Herbert Caller',          color: '#1d4ed8', icon: 'fa-shield' },
-  { id: 'frente_esperanza',    party: 'Frente de la Esperanza',      name: 'Fernando Olivera',        color: '#ca8a04', icon: 'fa-seedling' },
-  { id: 'primero_gente',       party: 'Primero la Gente',            name: 'Marisol Perez Tello',     color: '#16a34a', icon: 'fa-users' },
-  { id: 'progresemos',         party: 'Progresemos',                 name: 'Paul Jaimes',             color: '#0369a1', icon: 'fa-arrow-up-right-dots' },
-  { id: 'fe_peru',             party: 'Fe en el Peru',               name: 'Alvaro Paz de la Barra',  color: '#b45309', icon: 'fa-cross' },
-  { id: 'pais_todos',          party: 'Pais Para Todos',             name: 'Carlos Alvarez',          color: '#0f766e', icon: 'fa-globe-americas' },
-  { id: 'peru_accion',         party: 'Peru Accion',                 name: 'Francisco Diez-Canseco',  color: '#7c2d12', icon: 'fa-bolt' },
-  { id: 'integridad',          party: 'Integridad Democratica',      name: 'Wolfgang Grozo',          color: '#1e40af', icon: 'fa-handshake' },
-  { id: 'obras',               party: 'Partido Civico Obras',        name: 'Ricardo Belmont',         color: '#dc2626', icon: 'fa-helmet-safety' },
-  { id: 'pte',                 party: 'PTE Peru',                    name: 'Napoleon Becerra',        color: '#15803d', icon: 'fa-mountain' },
-  { id: 'venceremos',          party: 'Alianza Venceremos',          name: 'Ronald Atencio',          color: '#7c3aed', icon: 'fa-fist-raised' },
-  { id: 'cooperacion',         party: 'Cooperacion Popular',         name: 'Yonhy Lescano',           color: '#0369a1', icon: 'fa-hands-helping' },
-  { id: 'peru_primero',        party: 'Peru Primero',                name: 'Mario Vizcarra',          color: '#be185d', icon: 'fa-medal' },
-  { id: 'democratico_federal', party: 'Partido Democratico Federal', name: 'Joaquin Masse',           color: '#1d4ed8', icon: 'fa-building-columns' },
-  { id: 'democrata_verde',     party: 'Partido Democrata Verde',     name: 'Alex Gonzales',           color: '#16a34a', icon: 'fa-tree' },
-  { id: 'unidad_nacional',     party: 'Unidad Nacional',             name: 'Roberto Chiabra',         color: '#0f172a', icon: 'fa-link' },
-  { id: 'libertad_popular',    party: 'Libertad Popular',            name: 'Rafael Belaunde',         color: '#b45309', icon: 'fa-unlock' },
-  { id: 'si_creo',             party: 'Partido SiCreo',              name: 'Carlos Espa',             color: '#7e22ce', icon: 'fa-lightbulb' },
-  { id: 'salvemos_peru',       party: 'Salvemos al Peru',            name: 'Antonio Ortiz',           color: '#0369a1', icon: 'fa-life-ring' },
-  { id: 'fuerza_libertad',     party: 'Fuerza y Libertad',           name: 'Fiorella Molinelli',      color: '#b91c1c', icon: 'fa-fire' },
-  { id: 'peru_moderno',        party: 'Peru Moderno',                name: 'Carlos Jaico',            color: '#0284c7', icon: 'fa-city' },
-  { id: 'prin',                party: 'Partido PRIN',                name: 'Walter Chirinos',         color: '#7c3aed', icon: 'fa-p' },
-  { id: 'democrata_unido',     party: 'Democrata Unido Peru',        name: 'Charlie Carrasco',        color: '#0f766e', icon: 'fa-circle-half-stroke' },
-  { id: 'voto_nulo',           party: 'Voto Nulo / En Blanco',       name: 'Ninguno',                 color: '#6b7280', icon: 'fa-ban', nulo: true },
+  { id: 'fuerza_popular',      party: 'Fuerza Popular',              name: 'Keiko Fujimori',         color: '#cc0000', icon: 'fa-star',              logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Logo_of_the_Popular_Force_%282024%29.svg/200px-Logo_of_the_Popular_Force_%282024%29.svg.png' },
+  { id: 'alianza_progreso',    party: 'Alianza Para el Progreso',    name: 'Cesar Acuna',            color: '#f97316', icon: 'fa-chart-line',        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/APP_logo.png/200px-APP_logo.png' },
+  { id: 'renovacion_popular',  party: 'Renovacion Popular',          name: 'Rafael Lopez Aliaga',    color: '#2563eb', icon: 'fa-rotate',            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Renovaci%C3%B3n_Popular_logo.png/200px-Renovaci%C3%B3n_Popular_logo.png' },
+  { id: 'avanza_pais',         party: 'Avanza Pais',                 name: 'Jose Williams Zapata',   color: '#7c3aed', icon: 'fa-forward',           logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Avanza_Pa%C3%ADs_logo.png/200px-Avanza_Pa%C3%ADs_logo.png' },
+  { id: 'somos_peru',          party: 'Somos Peru',                  name: 'George Forsyth',         color: '#16a34a', icon: 'fa-leaf',              logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Somos_Per%C3%BA_logo.svg/200px-Somos_Per%C3%BA_logo.svg.png' },
+  { id: 'peru_libre',          party: 'Peru Libre',                  name: 'Vladimir Cerron',        color: '#dc2626', icon: 'fa-dove',              logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Peru_libre_logo.png/200px-Peru_libre_logo.png' },
+  { id: 'podemos_peru',        party: 'Podemos Peru',                name: 'Jose Luna Galvez',       color: '#0891b2', icon: 'fa-hand-fist',         logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Podemos_Per%C3%BA_logo.png/200px-Podemos_Per%C3%BA_logo.png' },
+  { id: 'juntos_peru',         party: 'Juntos por el Peru',          name: 'Roberto Sanchez',        color: '#dc7c02', icon: 'fa-people-group',      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Logo_juntos_por_el_Peru.svg/200px-Logo_juntos_por_el_Peru.svg.png' },
+  { id: 'partido_morado',      party: 'Partido Morado',              name: 'Mesias Guevara',         color: '#7c3aed', icon: 'fa-circle',            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Partido_Morado_logo.svg/200px-Partido_Morado_logo.svg.png' },
+  { id: 'apra',                party: 'Partido Aprista Peruano',     name: 'Enrique Valderrama',     color: '#dc2626', icon: 'fa-sun',               logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/APRA_logo.svg/200px-APRA_logo.svg.png' },
+  { id: 'ahora_nacion',        party: 'Ahora Nacion',                name: 'Alfonso Lopez-Chau',     color: '#059669', icon: 'fa-flag',              logo: '' },
+  { id: 'buen_gobierno',       party: 'Partido del Buen Gobierno',   name: 'Jorge Nieto',            color: '#0284c7', icon: 'fa-scale-balanced',    logo: '' },
+  { id: 'un_camino',           party: 'Un Camino Diferente',         name: 'Rosario Fernandez',      color: '#9333ea', icon: 'fa-road',              logo: '' },
+  { id: 'patriotico',          party: 'Partido Patriotico del Peru', name: 'Herbert Caller',         color: '#1d4ed8', icon: 'fa-shield',            logo: '' },
+  { id: 'frente_esperanza',    party: 'Frente de la Esperanza',      name: 'Fernando Olivera',       color: '#ca8a04', icon: 'fa-seedling',          logo: '' },
+  { id: 'primero_gente',       party: 'Primero la Gente',            name: 'Marisol Perez Tello',    color: '#16a34a', icon: 'fa-users',             logo: '' },
+  { id: 'progresemos',         party: 'Progresemos',                 name: 'Paul Jaimes',            color: '#0369a1', icon: 'fa-arrow-up-right-dots', logo: '' },
+  { id: 'fe_peru',             party: 'Fe en el Peru',               name: 'Alvaro Paz de la Barra', color: '#b45309', icon: 'fa-cross',             logo: '' },
+  { id: 'pais_todos',          party: 'Pais Para Todos',             name: 'Carlos Alvarez',         color: '#0f766e', icon: 'fa-globe-americas',    logo: '' },
+  { id: 'peru_accion',         party: 'Peru Accion',                 name: 'Francisco Diez-Canseco', color: '#7c2d12', icon: 'fa-bolt',              logo: '' },
+  { id: 'integridad',          party: 'Integridad Democratica',      name: 'Wolfgang Grozo',         color: '#1e40af', icon: 'fa-handshake',         logo: '' },
+  { id: 'obras',               party: 'Partido Civico Obras',        name: 'Ricardo Belmont',        color: '#dc2626', icon: 'fa-helmet-safety',     logo: '' },
+  { id: 'pte',                 party: 'PTE Peru',                    name: 'Napoleon Becerra',       color: '#15803d', icon: 'fa-mountain',          logo: '' },
+  { id: 'venceremos',          party: 'Alianza Venceremos',          name: 'Ronald Atencio',         color: '#7c3aed', icon: 'fa-fist-raised',       logo: '' },
+  { id: 'cooperacion',         party: 'Cooperacion Popular',         name: 'Yonhy Lescano',          color: '#0369a1', icon: 'fa-hands-helping',     logo: '' },
+  { id: 'peru_primero',        party: 'Peru Primero',                name: 'Mario Vizcarra',         color: '#be185d', icon: 'fa-medal',             logo: '' },
+  { id: 'democratico_federal', party: 'Partido Democratico Federal', name: 'Joaquin Masse',          color: '#1d4ed8', icon: 'fa-building-columns',  logo: '' },
+  { id: 'democrata_verde',     party: 'Partido Democrata Verde',     name: 'Alex Gonzales',          color: '#16a34a', icon: 'fa-tree',              logo: '' },
+  { id: 'unidad_nacional',     party: 'Unidad Nacional',             name: 'Roberto Chiabra',        color: '#0f172a', icon: 'fa-link',              logo: '' },
+  { id: 'libertad_popular',    party: 'Libertad Popular',            name: 'Rafael Belaunde',        color: '#b45309', icon: 'fa-unlock',            logo: '' },
+  { id: 'si_creo',             party: 'Partido SiCreo',              name: 'Carlos Espa',            color: '#7e22ce', icon: 'fa-lightbulb',         logo: '' },
+  { id: 'salvemos_peru',       party: 'Salvemos al Peru',            name: 'Antonio Ortiz',          color: '#0369a1', icon: 'fa-life-ring',         logo: '' },
+  { id: 'fuerza_libertad',     party: 'Fuerza y Libertad',           name: 'Fiorella Molinelli',     color: '#b91c1c', icon: 'fa-fire',              logo: '' },
+  { id: 'peru_moderno',        party: 'Peru Moderno',                name: 'Carlos Jaico',           color: '#0284c7', icon: 'fa-city',              logo: '' },
+  { id: 'prin',                party: 'Partido PRIN',                name: 'Walter Chirinos',        color: '#7c3aed', icon: 'fa-p',                 logo: '' },
+  { id: 'democrata_unido',     party: 'Democrata Unido Peru',        name: 'Charlie Carrasco',       color: '#0f766e', icon: 'fa-circle-half-stroke', logo: '' },
+  { id: 'voto_nulo',           party: 'Voto Nulo / En Blanco',       name: 'Ninguno',                color: '#6b7280', icon: 'fa-ban',               logo: '', nulo: true },
 ];
 
 let currentUser = null;
@@ -343,7 +344,7 @@ let selectedCandidate = null;
 let hasVoted = false;
 let resultsInterval = null;
 
-// ── Helpers UI ─────────────────────────────────
+
 function showError(id, msg) {
   const el = document.getElementById(id);
   el.style.display = 'flex';
@@ -354,7 +355,7 @@ function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 window.closeModal = closeModal;
 
-// ── Tabs ───────────────────────────────────────
+
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -370,7 +371,7 @@ function showTab(name) {
 }
 window.showTab = showTab;
 
-// ── Candidatos grid ────────────────────────────
+
 function buildCandidatesGrid() {
   const grid = document.getElementById('candidates-grid');
   grid.innerHTML = '';
@@ -379,11 +380,12 @@ function buildCandidatesGrid() {
     card.className = 'candidate-card' + (c.nulo ? ' nulo' : '');
     card.dataset.id = c.id;
     card.onclick = () => selectCandidate(c.id);
+    const logoHtml = c.logo
+      ? `<img src="${c.logo}" alt="${c.party}" style="width:80px;height:80px;object-fit:contain;margin:0 auto 10px;display:block;border-radius:6px;background:var(--card-bg);padding:2px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cand-icon" style="background:${c.color};display:none;"><i class="fas ${c.icon}"></i></div>`
+      : `<div class="cand-icon" style="background:${c.color}"><i class="fas ${c.icon}"></i></div>`;
     card.innerHTML = `
       <div class="candidate-check"><i class="fas fa-check"></i></div>
-      <div class="cand-icon" style="background:${c.color}">
-        <i class="fas ${c.icon}"></i>
-      </div>
+      ${logoHtml}
       <div class="candidate-party">${c.party}</div>
       <div class="candidate-name">${c.nulo ? '<i class="fas fa-ban"></i> Voto Nulo' : c.name}</div>
     `;
@@ -403,7 +405,7 @@ function selectCandidate(id) {
   document.getElementById('confirm-bar').classList.add('show');
 }
 
-// ── Registro ───────────────────────────────────
+
 async function doRegister() {
   const name = document.getElementById('entry-name').value.trim();
   hideError('entry-error');
@@ -436,7 +438,7 @@ function setCurrentUser(user) {
   checkVoted();
 }
 
-// ── Verificar voto ─────────────────────────────
+
 async function checkVoted() {
   if (!currentUser) return;
   const { data } = await db.from('votes').select('id').eq('user_id', currentUser.id).maybeSingle();
@@ -454,7 +456,7 @@ function showAlreadyVoted() {
   document.getElementById('confirm-bar').classList.remove('show');
 }
 
-// ── Confirmar voto ─────────────────────────────
+
 function openVoteConfirm() {
   if (!selectedCandidate) return;
   const cand = CANDIDATES.find(c => c.id === selectedCandidate);
@@ -493,7 +495,7 @@ async function confirmVote() {
 }
 window.confirmVote = confirmVote;
 
-// ── Resultados ─────────────────────────────────
+
 async function loadResults() {
   const list = document.getElementById('results-list');
   try {
@@ -549,7 +551,7 @@ async function loadResults() {
   }
 }
 
-// ── Logout ─────────────────────────────────────
+
 function logout() {
   localStorage.removeItem('voto_user');
   currentUser = null; hasVoted = false; selectedCandidate = null;
@@ -565,7 +567,7 @@ function logout() {
 }
 window.logout = logout;
 
-// ── Restaurar sesion del localStorage ──────────
+
 function restoreSession() {
   try {
     const saved = localStorage.getItem('voto_user');
@@ -573,7 +575,7 @@ function restoreSession() {
   } catch (e) {}
 }
 
-// ── Init ───────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', () => {
   buildCandidatesGrid();
   restoreSession();
