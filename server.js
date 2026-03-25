@@ -3,7 +3,6 @@ const session = require("express-session");
 const { createClient } = require("@supabase/supabase-js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
-const path = require("path");
 const crypto = require("crypto");
 
 const app = express();
@@ -21,7 +20,7 @@ app.use(
 
 const supabase = createClient(
   "https://lmrkjbyjzoztmyyeccdt.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtcmtqYnlqem96dG15eWVjY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTkyMzYsImV4cCI6MjA4OTk3NTIzNn0.k9pJ5yp4zvDdLH8VyqkAb86sp4Jb6aKYtYZLKwsAnKo"
+  "TU_SUPABASE_KEY"
 );
 
 const transporter = nodemailer.createTransport({
@@ -32,10 +31,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.use(express.static("public"));
-
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(__dirname + "/index.html");
 });
 
 app.post("/register", async (req, res) => {
@@ -45,21 +42,15 @@ app.post("/register", async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const otp_exp = new Date(Date.now() + 10 * 60 * 1000);
 
-  const { data, error } = await supabase
-    .from("users")
-    .insert([
-      {
-        email,
-        name,
-        password_hash: hash,
-        otp_code: otp,
-        otp_expires_at: otp_exp,
-      },
-    ])
-    .select()
-    .single();
-
-  if (error) return res.send("Error registro");
+  await supabase.from("users").insert([
+    {
+      email,
+      name,
+      password_hash: hash,
+      otp_code: otp,
+      otp_expires_at: otp_exp,
+    },
+  ]);
 
   await transporter.sendMail({
     from: "shieldgramorganization@gmail.com",
@@ -68,7 +59,7 @@ app.post("/register", async (req, res) => {
     text: "Tu codigo es: " + otp,
   });
 
-  res.send("Registro exitoso, revisa tu correo");
+  res.send("Registro exitoso");
 });
 
 app.post("/login", async (req, res) => {
@@ -100,15 +91,13 @@ app.post("/vote", async (req, res) => {
     req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
   const ip_hash = crypto.createHash("sha256").update(ip).digest("hex");
 
-  const { error } = await supabase.from("votes").insert([
+  await supabase.from("votes").insert([
     {
       user_id: req.session.user_id,
       candidate_id: candidate,
       ip_hash: ip_hash,
     },
   ]);
-
-  if (error) return res.send("Ya votaste o error");
 
   res.send("Voto registrado");
 });
@@ -118,8 +107,6 @@ app.get("/results", async (req, res) => {
   res.json(data);
 });
 
-const PORT = 3000;
-
-app.listen(PORT, () => {
-  console.log("Servidor corriendo en puerto 3000");
+app.listen(3000, () => {
+  console.log("Servidor corriendo");
 });
