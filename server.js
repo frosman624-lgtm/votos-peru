@@ -12,7 +12,7 @@ app.use(express.static(__dirname));
 
 app.use(
   session({
-    secret: "clave_super_secreta_2026",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
@@ -20,15 +20,15 @@ app.use(
 );
 
 const supabase = createClient(
-  "https://abmptuqnbmhrrwjykcnq.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibXB0dXFuYm1ocnJ3anlrY25xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDQxMzg3NywiZXhwIjoyMDg5OTg5ODc3fQ.Gd_WsavXiKIsOfoq_dqimimkXReTmL0DHJTrCY9dtEI"
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
 );
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "shieldgramorganization@gmail.com",
-    pass: "wyknehhgagbtejeq",
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
   },
 });
 
