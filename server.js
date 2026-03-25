@@ -20,8 +20,8 @@ app.use(
 );
 
 const supabase = createClient(
-  "https://lmrkjbyjzoztmyyeccdt.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtcmtqYnlqem96dG15eWVjY2R0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDM5OTIzNiwiZXhwIjoyMDg5OTc1MjM2fQ.ZEvc7Mjs6tYvmSRRlqcJB2sw-YMNy47h-tczp_Fx7zA"
+  "https://abmptuqnbmhrrwjykcnq.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibXB0dXFuYm1ocnJ3anlrY25xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDQxMzg3NywiZXhwIjoyMDg5OTg5ODc3fQ.Gd_WsavXiKIsOfoq_dqimimkXReTmL0DHJTrCY9dtEI"
 );
 
 const transporter = nodemailer.createTransport({
