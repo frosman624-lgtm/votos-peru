@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
   <style>
     :root {
       --bg: #0d1117;
@@ -554,6 +555,12 @@
     .footer-flag .r { background: #cc0000; }
     .footer-flag .w { background: #ffffff; }
 
+    .hcaptcha-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
     @media(max-width:640px) {
       .candidates-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; }
       .header { padding: 0 14px; }
@@ -609,6 +616,9 @@
           <input type="text" id="entry-name" placeholder="Ej: Juan Perez Garcia" onkeydown="if(event.key==='Enter')doRegister()"/>
         </div>
         <div id="entry-error" class="alert alert-error" style="display:none;text-align:left;"><i class="fas fa-circle-xmark"></i><span></span></div>
+        <div class="hcaptcha-wrap">
+          <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001" data-theme="dark" data-size="normal"></div>
+        </div>
         <button class="btn btn-primary btn-full" onclick="doRegister()" id="entry-btn">
           <i class="fas fa-arrow-right"></i> Continuar a votar
         </button>
@@ -840,6 +850,12 @@ async function doRegister() {
     return;
   }
 
+  const hcaptchaToken = hcaptcha.getResponse();
+  if (!hcaptchaToken) {
+    showError('entry-error', 'Por favor completa el captcha antes de continuar.');
+    return;
+  }
+
   const name = $('entry-name').value.trim();
   if (!name || name.length < 2) {
     showError('entry-error', 'Ingresa tu nombre completo (minimo 2 caracteres).');
@@ -891,6 +907,7 @@ async function doRegister() {
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a votar';
+    if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
   }
 }
 window.doRegister = doRegister;
@@ -1145,6 +1162,7 @@ function logout() {
   document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
   $('entry-name').value = '';
   hideError('entry-error');
+  if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
 }
 window.logout = logout;
 
